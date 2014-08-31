@@ -22,16 +22,16 @@ import org.jfree.ui.RefineryUtilities;
 public class Main {
     public static final int bufferSize = 4096;
 
-    static float x_pos = 0.15216018938646675872953245216019f;
+    static float x_pos = 0.45216018938646675872953245216019f;
     static float x_width = 0.057f;
 
     static List<double[]> freqDHist = new ArrayList<>();
     static List<Integer> bytes = new ArrayList<Integer>();
 
     public static void main(String[] args) throws Exception {
-//         String filePath = "D:\\music\\effects\\SDuncan\\SH-8\\neck_cl.mp3";
-        String filePath = "D:\\music\\ZZ Top\\1970 - First Album\\Zz Top - Backdoor Love Affair.mp3";
-//        String filePath = "D:\\music\\Graveworm\\2001 - Scourge Of Malice\\01 - Dreaded Time.mp3";
+        // String filePath = "D:\\music\\effects\\SDuncan\\SH-8\\neck_cl.mp3";
+//        String filePath = "D:\\music\\ZZ Top\\1970 - First Album\\Zz Top - Backdoor Love Affair.mp3";
+        String filePath = "D:\\music\\Graveworm\\2001 - Scourge Of Malice\\01 - Dreaded Time.mp3";
 
         // String filePath = "D:\\projects\\03-mp3-extractor\\100hz.mp3";
         readPCM(filePath);
@@ -131,6 +131,8 @@ public class Main {
             for (int i = 0; i < data.length; i++) {
                 bytes.add(data[i]);
             }
+            // apply window function
+            doWindow(data);
 
             // perform DFT
             freqDHist.add(doDFT(data));
@@ -141,27 +143,34 @@ public class Main {
         }
     }
 
+    private static void doWindow(int[] data) {
+        for (int i = 0; i < data.length / 2; i++) {
+            data[i] *= (i / (float) (data.length / 2));
+            data[i + (data.length / 2)] *= (1.0 - (i / (float) (data.length / 2)));
+        }
+    }
+
     private static double[] doDFT(int[] data) {
 
-//         int n = data.length;
-//         double f[] = new double[n / 2];
-//         for (int j = 0; j < n / 2; j++) {
-//        
-//         double firstSummation = 0;
-//         double secondSummation = 0;
-//        
-//         for (int k = 0; k < n; k++) {
-//         double twoPInjk = ((2 * Math.PI) / n) * (j * k);
-//         firstSummation += data[k] * Math.cos(twoPInjk);
-//         secondSummation += data[k] * Math.sin(twoPInjk);
-//         }
-//        
-//         f[j] = Math.abs(Math.sqrt(Math.pow(firstSummation, 2) +
-//         Math.pow(secondSummation, 2)));
-//         }
-//        
-//               
-//         return f;
+        // int n = data.length;
+        // double f[] = new double[n / 2];
+        // for (int j = 0; j < n / 2; j++) {
+        //
+        // double firstSummation = 0;
+        // double secondSummation = 0;
+        //
+        // for (int k = 0; k < n; k++) {
+        // double twoPInjk = ((2 * Math.PI) / n) * (j * k);
+        // firstSummation += data[k] * Math.cos(twoPInjk);
+        // secondSummation += data[k] * Math.sin(twoPInjk);
+        // }
+        //
+        // f[j] = Math.abs(Math.sqrt(Math.pow(firstSummation, 2) +
+        // Math.pow(secondSummation, 2)));
+        // }
+        //
+        //
+        // return f;
 
         Complex[] x = new Complex[data.length];
         for (int i = 0; i < data.length; i++) {
