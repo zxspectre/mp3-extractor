@@ -119,7 +119,7 @@ public class Test {
         RefineryUtilities.centerFrameOnScreen(demo);
         demo.setVisible(true);
 
-        Plot2D demo2 = new Plot2D("Freqdomain 1", toDb(computeLengths(getSum(freqDHist, Math.round(freqDHist.size() * x_pos)))));
+        Plot2D demo2 = new Plot2D("Freqdomain 1", toDb(computeLengths(getSum(freqDHist, Math.round(freqDHist.size() * x_pos)))),1);
         // Plot2D demo2 = new Plot2D("Freqdomain 1",
         // toDb(computeLengths((freqDHist.get(301)))));
 
