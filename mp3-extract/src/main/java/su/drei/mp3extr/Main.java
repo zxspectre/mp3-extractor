@@ -76,7 +76,7 @@ public class Main {
             filePath = "../800Hz-10db.mp3";
             break;
         case 8:
-            filePath = "../11kHz-10db.mp3";
+            filePath = "../5-11kHz_10db.wav";
             break;
         }
 
