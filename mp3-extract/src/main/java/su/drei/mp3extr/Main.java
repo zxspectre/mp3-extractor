@@ -22,18 +22,21 @@ import org.jfree.ui.RefineryUtilities;
 public class Main {
     public static final int bufferSize = 4096;
 
-    static float x_pos = (49.709f+50.8f)/2/106.449f;
-    static float x_width = 1.091f/106.449f;
+    static float x_pos = (49.709f + 50.8f) / 2 / 106.449f;
+    static float x_width = 1.091f / 106.449f;
 
+    // array (by channel) of list(batch no) of doubles(histogram itself)...
     static List<double[]>[] freqDHist = null;
-    static List<Integer> bytes = new ArrayList<Integer>();
+    static List<Integer> bytes = new ArrayList<>();
 
     public static void main(String[] args) throws Exception {
         // String filePath = "D:\\music\\effects\\SDuncan\\SH-8\\neck_cl.mp3";
-//        String filePath = "D:\\music\\ZZ Top\\1970 - First Album\\Zz Top - Backdoor Love Affair.mp3";
-//        String filePath = "D:\\music\\Graveworm\\2001 - Scourge Of Malice\\01 - Dreaded Time.mp3";
+        // String filePath =
+        // "D:\\music\\ZZ Top\\1970 - First Album\\Zz Top - Backdoor Love Affair.mp3";
+        // String filePath =
+        // "D:\\music\\Graveworm\\2001 - Scourge Of Malice\\01 - Dreaded Time.mp3";
 
-         String filePath = "../100hz.mp3";
+        String filePath = "../100hz.mp3";
         readPCM(filePath);
     }
 
@@ -45,16 +48,17 @@ public class Main {
             AudioFormat decodedFormat = new AudioFormat(AudioFormat.Encoding.PCM_SIGNED, baseFormat.getSampleRate(), 16, baseFormat.getChannels(), baseFormat.getChannels() * 2, baseFormat.getSampleRate(), false);
             din = AudioSystem.getAudioInputStream(decodedFormat, in);
 
+            //init freq domain histogram variable
             freqDHist = new ArrayList[decodedFormat.getChannels()];
-            for(int i = 0; i<decodedFormat.getChannels(); i++){
-                freqDHist[i]=new ArrayList<double[]>();
+            for (int i = 0; i < decodedFormat.getChannels(); i++) {
+                freqDHist[i] = new ArrayList<double[]>();
             }
-            
-            rawplay(decodedFormat, din);
+
+            process(decodedFormat, din);
         }
     }
 
-    private static void rawplay(AudioFormat decodedFormat, AudioInputStream din) throws Exception {
+    private static void process(AudioFormat decodedFormat, AudioInputStream din) throws Exception {
         final int channelsCount = decodedFormat.getChannels();
         byte[] data = new byte[bufferSize];
         int batchNo = 0;
@@ -73,11 +77,8 @@ public class Main {
                     // loop over frames for one channel only
                     for (int pos = 0; pos < framesCnt; pos++) {
                         // get two bytes and glue 'em together
-                        int b1 = data[pos * channelsCount * 2 + chNo*2];
-                        int b2 = data[pos * channelsCount * 2 + chNo*2 + 1];
-                        /*
-                         * if (b1 < 0) b1 += 0x100; if (b2 < 0) b2 += 0x100;
-                         */
+                        int b1 = data[pos * channelsCount * 2 + chNo * 2];
+                        int b2 = data[pos * channelsCount * 2 + chNo * 2 + 1];
                         int value;
                         if (decodedFormat.isBigEndian()) {
                             value = (b1 << 8) | (b2 & 0xff);
@@ -111,14 +112,16 @@ public class Main {
         RefineryUtilities.centerFrameOnScreen(demo);
         demo.setVisible(true);
 
-//        System.out.println("Writing frequency domain data");
-//        File fdhOutput = new File("fdh.out");
-//        BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(fdhOutput)));
-//        for (Integer i : bytes) {
-//            writer.write(i + "\n");
-//        }
-//        writer.close();
-//        System.out.println("Writing frequency domain data. Done." + fdhOutput.getAbsolutePath());
+        // System.out.println("Writing frequency domain data");
+        // File fdhOutput = new File("fdh.out");
+        // BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new
+        // FileOutputStream(fdhOutput)));
+        // for (Integer i : bytes) {
+        // writer.write(i + "\n");
+        // }
+        // writer.close();
+        // System.out.println("Writing frequency domain data. Done." +
+        // fdhOutput.getAbsolutePath());
 
         Plot2D demo2 = new Plot2D("Freqdomain 1", toDb(computeLengths(getSum(freqDHist, Math.round(freqDHist[0].size() * x_pos)))), decodedFormat.getSampleRate() / data.length * 2 * decodedFormat.getChannels());
         // Plot2D demo2 = new Plot2D("Freqdomain 1",
@@ -126,21 +129,12 @@ public class Main {
         demo2.pack();
         RefineryUtilities.centerFrameOnScreen(demo2);
         demo2.setVisible(true);
-
-        
-//        Plot2D demo3 = new Plot2D("Freqdomain 1", toDb(computeLengths(getSum(freqDHist[1], Math.round(freqDHist[0].size() * x_pos)))), decodedFormat.getSampleRate() / data.length * 2 * decodedFormat.getChannels());
-//        // Plot2D demo2 = new Plot2D("Freqdomain 1",
-//        // toDb(computeLengths(freqDHist.get(301))));
-//        demo3.pack();
-//        RefineryUtilities.centerFrameOnScreen(demo3);
-//        demo3.setVisible(true);
-
     }
 
     private static void handlePcmChannel(int[] data, int chNo, int batchNo) {
-        if(batchNo < 2300){
-        // save amplitude data
-            if(chNo == 1){
+        if (batchNo < 2300) {
+            // save amplitude data
+            if (chNo == 1) {
                 for (int i = 0; i < data.length; i++) {
                     bytes.add(data[i]);
                 }
@@ -166,26 +160,6 @@ public class Main {
 
     private static double[] doDFT(int[] data) {
 
-        // int n = data.length;
-        // double f[] = new double[n / 2];
-        // for (int j = 0; j < n / 2; j++) {
-        //
-        // double firstSummation = 0;
-        // double secondSummation = 0;
-        //
-        // for (int k = 0; k < n; k++) {
-        // double twoPInjk = ((2 * Math.PI) / n) * (j * k);
-        // firstSummation += data[k] * Math.cos(twoPInjk);
-        // secondSummation += data[k] * Math.sin(twoPInjk);
-        // }
-        //
-        // f[j] = Math.abs(Math.sqrt(Math.pow(firstSummation, 2) +
-        // Math.pow(secondSummation, 2)));
-        // }
-        //
-        //
-        // return f;
-
         Complex[] x = new Complex[data.length];
         for (int i = 0; i < data.length; i++) {
             x[i] = new Complex(data[i], 0);
@@ -196,21 +170,8 @@ public class Main {
         for (int i = 0; i < y.length; i++) {
             res[i] = Math.pow(Math.pow(y[i].re(), 2) + Math.pow(y[i].im(), 2), 1 / 3f);
         }
-        
-//        //apply FFT one more time and take only real part
-//        x = new Complex[res.length];
-//        for (int i = 0; i < res.length; i++) {
-//            x[i] = new Complex(res[i], 0);
-//        }
-//        y = fft(x);
-//        res = new double[y.length];
-//        for (int i = 0; i < y.length; i++) {
-//            res[i] = y[i].re();
-//        }
-        
-        
-        return res;
 
+        return res;
     }
 
     private static Complex[] fft(Complex[] x) {
@@ -258,38 +219,33 @@ public class Main {
         return res;
     }
 
-    // beware: thrash methods below
+    // beware: thrash methods below - in general: process data in order to plot it
 
+
+    /**
+     * Return histogram that is an average of hist's around pos. Vicinity determined by x_width
+     * @param freqDHist all hist's
+     * @param pos 'around 'pos'
+     * @return average hist
+     */
     private static double[] getSum(List<double[]>[] freqDHist, int pos) {
         double[] res = new double[freqDHist[0].get(0).length];
         int window = Math.round(freqDHist[0].size() * x_width);
         System.out.println("Windows width is " + window);
-        //sum over buffer batches
+        // sum over buffer batches
         for (int i = pos - window / 2; i < pos + window / 2; i++) {
-            //sum over each buffer
+            // sum over each buffer
             for (int j = 0; j < freqDHist[0].get(0).length; j++) {
-                //sum over each channel
-                for(int ch = 0; ch<freqDHist.length; ch++)
+                // sum over each channel
+                for (int ch = 0; ch < freqDHist.length; ch++)
                     res[j] += freqDHist[ch].get(i)[j] / window / freqDHist.length;
             }
         }
         return res;
     }
-    
-    private static double[] getSum(List<double[]> freqDHist, int pos) {
-        double[] res = new double[freqDHist.get(0).length];
-        int window = Math.round(freqDHist.size() * x_width);
-        System.out.println("Windows width is " + window);
-        //sum over buffer batches
-        for (int i = pos - window / 2; i < pos + window / 2; i++) {
-            //sum over each buffer
-            for (int j = 0; j < freqDHist.get(0).length; j++) {
-                res[j] += freqDHist.get(i)[j] / window;
-            }
-        }
-        return res;
-    }
 
+   
+    // 's not needed, as long as FFT method returns real length of coeff-ts, w/o phase info
     private static double[] computeLengths(double[] fdh) {
         /*
          * double[] res = new double[fdh.length / 2]; for (int j = 0; j <
@@ -300,20 +256,25 @@ public class Main {
          */
         return fdh;
     }
+    
+    /**
+     * Convert histogram values to decibels
+     * @param data input histogram
+     * @return db converted hist
+     */
+    private static double[] toDb(double[] data) {
+        for (int i = 0; i < data.length; i++) {
+            double temp = (data[i] / data.length);
+            if (temp > 0.0)
+                data[i] = 10 * Math.log10(temp);
+            else
+                data[i] = 0;
+        }
+        return data;
+    }
 
     private static double complLength(double f, double g) {
         return Math.pow(f * f + g * g, 1 / 3f);
-    }
-
-    private static double[] toDb(double[] computeLengths) {
-        for (int i = 0; i < computeLengths.length; i++) {
-            double temp=(computeLengths[i] / computeLengths.length);
-            if (temp > 0.0)
-                computeLengths[i] = 10*Math.log10(temp);
-            else
-                computeLengths[i] = 0;
-        }
-        return computeLengths;
     }
 
 }

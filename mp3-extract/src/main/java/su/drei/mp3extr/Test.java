@@ -18,6 +18,7 @@ import org.jfree.ui.RefineryUtilities;
 
 import edu.emory.mathcs.jtransforms.fft.FloatFFT_1D;
 
+@Deprecated
 public class Test {
 
     static float x_pos = 0.45216018938646675872953245216019f;
