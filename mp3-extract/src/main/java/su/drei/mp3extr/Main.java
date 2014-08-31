@@ -132,6 +132,7 @@ public class Main {
     }
 
     private static void handlePcmChannel(int[] data, int chNo, int batchNo) {
+        //TODO: handle only first ~1-2 min of file, remove it after
         if (batchNo < 2300) {
             // save amplitude data
             if (chNo == 1) {
@@ -140,10 +141,10 @@ public class Main {
                 }
             }
             // apply window function
-            doWindow(data);
+            double[] windowed_data = doWindow(data);
 
             // perform DFT
-            freqDHist[chNo].add(doDFT(data));
+            freqDHist[chNo].add(doDFT(windowed_data));
             // save freq domain data
             if (batchNo % 100 == 0) {
                 System.out.println("Handling batch No." + batchNo);
@@ -151,14 +152,16 @@ public class Main {
         }
     }
 
-    private static void doWindow(int[] data) {
+    private static double[] doWindow(int[] data) {
+        double[] res = new double[data.length];
         for (int i = 0; i < data.length / 2; i++) {
-            data[i] *= (i / (float) (data.length / 2));
-            data[i + (data.length / 2)] *= (1.0 - (i / (float) (data.length / 2)));
+            res[i] = data[i] * (i / (float) (data.length / 2));
+            res[i] = data[i + (data.length / 2)] * (1.0 - (i / (float) (data.length / 2)));
         }
+        return res;
     }
 
-    private static double[] doDFT(int[] data) {
+    private static double[] doDFT(double[] data) {
 
         Complex[] x = new Complex[data.length];
         for (int i = 0; i < data.length; i++) {
