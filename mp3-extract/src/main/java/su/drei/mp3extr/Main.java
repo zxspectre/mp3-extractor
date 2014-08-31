@@ -29,12 +29,11 @@ public class Main {
     static List<Integer> bytes = new ArrayList<Integer>();
 
     public static void main(String[] args) throws Exception {
-        System.out.println(1f/2/2);
         // String filePath = "D:\\music\\effects\\SDuncan\\SH-8\\neck_cl.mp3";
 //        String filePath = "D:\\music\\ZZ Top\\1970 - First Album\\Zz Top - Backdoor Love Affair.mp3";
-        String filePath = "D:\\music\\Graveworm\\2001 - Scourge Of Malice\\01 - Dreaded Time.mp3";
+//        String filePath = "D:\\music\\Graveworm\\2001 - Scourge Of Malice\\01 - Dreaded Time.mp3";
 
-//         String filePath = "D:\\projects\\03-mp3-extractor\\100hz.mp3";
+         String filePath = "../100hz.mp3";
         readPCM(filePath);
     }
 
@@ -112,14 +111,14 @@ public class Main {
         RefineryUtilities.centerFrameOnScreen(demo);
         demo.setVisible(true);
 
-        System.out.println("Writing frequency domain data");
-        File fdhOutput = new File("fdh.out");
-        BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(fdhOutput)));
-        for (Integer i : bytes) {
-            writer.write(i + "\n");
-        }
-        writer.close();
-        System.out.println("Writing frequency domain data. Done." + fdhOutput.getAbsolutePath());
+//        System.out.println("Writing frequency domain data");
+//        File fdhOutput = new File("fdh.out");
+//        BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(fdhOutput)));
+//        for (Integer i : bytes) {
+//            writer.write(i + "\n");
+//        }
+//        writer.close();
+//        System.out.println("Writing frequency domain data. Done." + fdhOutput.getAbsolutePath());
 
         Plot2D demo2 = new Plot2D("Freqdomain 1", toDb(computeLengths(getSum(freqDHist, Math.round(freqDHist[0].size() * x_pos)))), decodedFormat.getSampleRate() / data.length * 2 * decodedFormat.getChannels());
         // Plot2D demo2 = new Plot2D("Freqdomain 1",
