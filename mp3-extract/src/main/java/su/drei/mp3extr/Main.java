@@ -1,13 +1,7 @@
 package su.drei.mp3extr;
 
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.OutputStreamWriter;
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import javax.sound.sampled.AudioFormat;
@@ -19,24 +13,75 @@ import javax.sound.sampled.SourceDataLine;
 
 import org.jfree.ui.RefineryUtilities;
 
+/**
+ * ToDo list:
+ * perform normalization (save modified mp3 or PCM to check?)
+ * don't process silent (low vol) parts
+ * handle extreme values (short samples e.g.)
+ * handle end of the buffer (or discard it?)
+ * export data in some format (series of freqDHist batches? e.g. ~5sec length) + mark style
+ * scan specified folder and handle all mp3 there
+ * test compatibility with diff. formats of mp3
+ * @author loki
+ *
+ */
+
 public class Main {
     public static final int bufferSize = 4096;
 
-    static float x_pos = (49.709f + 50.8f) / 2 / 106.449f;
-    static float x_width = 1.091f / 106.449f;
+    // parameters specifying for what mp3 part histogram is built
+    static float total_length=100f;
+    static float sample_start=20f;
+    static float sample_end=25f;
+
+    static float x_pos;
+    static float x_width;
 
     // array (by channel) of list(batch no) of doubles(histogram itself)...
     static List<double[]>[] freqDHist = null;
     static List<Integer> bytes = new ArrayList<>();
 
     public static void main(String[] args) throws Exception {
-        // String filePath = "D:\\music\\effects\\SDuncan\\SH-8\\neck_cl.mp3";
-        // String filePath =
-        // "D:\\music\\ZZ Top\\1970 - First Album\\Zz Top - Backdoor Love Affair.mp3";
-        // String filePath =
-        // "D:\\music\\Graveworm\\2001 - Scourge Of Malice\\01 - Dreaded Time.mp3";
+        String filePath = null;
 
-        String filePath = "../100hz.mp3";
+        //for convenient audio parts spec.
+        int preset = 8;
+        
+        switch (preset) {
+        case 1:
+            total_length = 161.985f;
+            sample_start = 23f;
+            sample_end = 25f;
+            filePath = "D:\\music\\ZZ Top\\1970 - First Album\\Zz Top - Backdoor Love Affair.mp3";
+            break;
+        case 2:
+            filePath = "D:\\music\\effects\\SDuncan\\SH-8\\neck_cl.mp3";
+            break;
+        case 3:
+            total_length = 106.449f;
+            sample_start = 52f;
+            sample_end = 53.5f;
+            filePath = "D:\\music\\Graveworm\\2001 - Scourge Of Malice\\01 - Dreaded Time.mp3";
+            break;
+        case 4:
+            filePath = "../100hz.mp3";
+            break;
+        case 5:
+            filePath = "../5kHz-10db.mp3";
+            break;
+        case 6:
+            filePath = "../20kHz-10db.mp3";
+            break;
+        case 7:
+            filePath = "../800Hz-10db.mp3";
+            break;
+        case 8:
+            filePath = "../11kHz-10db.mp3";
+            break;
+        }
+
+        x_pos = (sample_start + sample_end) / 2 / total_length;
+        x_width = (sample_end - sample_start) / total_length;
         readPCM(filePath);
     }
 
@@ -48,7 +93,7 @@ public class Main {
             AudioFormat decodedFormat = new AudioFormat(AudioFormat.Encoding.PCM_SIGNED, baseFormat.getSampleRate(), 16, baseFormat.getChannels(), baseFormat.getChannels() * 2, baseFormat.getSampleRate(), false);
             din = AudioSystem.getAudioInputStream(decodedFormat, in);
 
-            //init freq domain histogram variable
+            // init freq domain histogram variable
             freqDHist = new ArrayList[decodedFormat.getChannels()];
             for (int i = 0; i < decodedFormat.getChannels(); i++) {
                 freqDHist[i] = new ArrayList<double[]>();
@@ -132,7 +177,7 @@ public class Main {
     }
 
     private static void handlePcmChannel(int[] data, int chNo, int batchNo) {
-        //TODO: handle only first ~1-2 min of file, remove it after
+        // TODO: handle only first ~1-2 min of file, remove it after
         if (batchNo < 2300) {
             // save amplitude data
             if (chNo == 1) {
@@ -154,6 +199,7 @@ public class Main {
 
     private static double[] doWindow(int[] data) {
         double[] res = new double[data.length];
+        // triangular window function
         for (int i = 0; i < data.length / 2; i++) {
             res[i] = data[i] * (i / (float) (data.length / 2));
             res[i] = data[i + (data.length / 2)] * (1.0 - (i / (float) (data.length / 2)));
@@ -222,13 +268,17 @@ public class Main {
         return res;
     }
 
-    // beware: thrash methods below - in general: process data in order to plot it
-
+    // beware: thrash methods below - in general: process data in order to plot
+    // it
 
     /**
-     * Return histogram that is an average of hist's around pos. Vicinity determined by x_width
-     * @param freqDHist all hist's
-     * @param pos 'around 'pos'
+     * Return histogram that is an average of hist's around pos. Vicinity
+     * determined by x_width
+     * 
+     * @param freqDHist
+     *            all hist's
+     * @param pos
+     *            'around 'pos'
      * @return average hist
      */
     private static double[] getSum(List<double[]>[] freqDHist, int pos) {
@@ -247,8 +297,8 @@ public class Main {
         return res;
     }
 
-   
-    // 's not needed, as long as FFT method returns real length of coeff-ts, w/o phase info
+    // 's not needed, as long as FFT method returns real length of coeff-ts, w/o
+    // phase info
     private static double[] computeLengths(double[] fdh) {
         /*
          * double[] res = new double[fdh.length / 2]; for (int j = 0; j <
@@ -259,10 +309,12 @@ public class Main {
          */
         return fdh;
     }
-    
+
     /**
      * Convert histogram values to decibels
-     * @param data input histogram
+     * 
+     * @param data
+     *            input histogram
      * @return db converted hist
      */
     private static double[] toDb(double[] data) {
