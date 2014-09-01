@@ -1,0 +1,8 @@
+ perform normalization (save modified mp3 or PCM to check?)
+ don't process silent (low vol) parts
+ handle extreme values (short samples e.g.)
+ handle end of the buffer (or discard it?)
+ export data in some format (series of freqDHist batches? e.g. ~5sec length) + mark style
+ scan specified folder and handle all mp3 there
+ test compatibility with diff. formats of mp3
+ rewrite using stream API

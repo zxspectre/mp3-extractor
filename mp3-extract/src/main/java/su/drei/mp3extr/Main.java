@@ -13,19 +13,6 @@ import javax.sound.sampled.SourceDataLine;
 
 import org.jfree.ui.RefineryUtilities;
 
-/**
- * ToDo list:
- * perform normalization (save modified mp3 or PCM to check?)
- * don't process silent (low vol) parts
- * handle extreme values (short samples e.g.)
- * handle end of the buffer (or discard it?)
- * export data in some format (series of freqDHist batches? e.g. ~5sec length) + mark style
- * scan specified folder and handle all mp3 there
- * test compatibility with diff. formats of mp3
- * @author loki
- *
- */
-
 public class Main {
     public static final int bufferSize = 4096;
 
@@ -70,13 +57,13 @@ public class Main {
             filePath = "../5kHz-10db.mp3";
             break;
         case 6:
-            filePath = "../20kHz-10db.mp3";
-            break;
-        case 7:
             filePath = "../800Hz-10db.mp3";
             break;
-        case 8:
+        case 7:
             filePath = "../5-11kHz_10db.wav";
+            break;
+        case 8:
+            filePath = "../5-11kHz_fadeout.wav";
             break;
         }
 
