@@ -32,7 +32,7 @@ public class Main {
         String filePath = null;
 
         //for convenient audio parts spec.
-        int preset = 5;
+        int preset = 1;
         
         switch (preset) {
         case 1:
@@ -189,11 +189,27 @@ public class Main {
 
     private static double[] doWindow(int[] data) {
         double[] res = new double[data.length];
-        // triangular window function
-        for (int i = 0; i < data.length / 2; i++) {
-            res[i] = data[i] * (i / (float) (data.length / 2));
-            res[i] = data[i + (data.length / 2)] * (1.0 - (i / (float) (data.length / 2)));
+        // triangular window function - too noisy
+//        for (int i = 0; i < data.length / 2; i++) {
+//            res[i] = data[i] * (i / (float) (data.length / 2));
+//            res[i + (data.length / 2)] = data[i + (data.length / 2)] * (1.0 - (i / (float) (data.length / 2)));
+//        }
+        
+        //Hamming - looks ok
+//        for (int i = 0; i < data.length; i++) {
+//            res[i] = data[i] * 0.54 - 0.46 * Math.cos(2 * Math.PI * i / (data.length - 1));
+//        }
+        
+        //Blackman - 
+//        for (int i = 0; i < data.length; i++) {
+//            res[i] = data[i] * 0.42 - 0.5 * Math.cos (2 * Math.PI * i / (data.length - 1)) + 0.08 * Math.cos (4 * Math.PI * i / (data.length - 1));
+//        }
+
+        //Blackman - Harris 
+        for (int i = 0; i < data.length; i++) {
+            res[i] = data[i] * 0.35875 - 0.48829 * Math.cos(2 * Math.PI * i /(data.length-1)) + 0.14128 * Math.cos(4 * Math.PI * i/(data.length-1)) - 0.01168 * Math.cos(6 * Math.PI  * i/(data.length-1));
         }
+
         return res;
     }
 
@@ -316,10 +332,6 @@ public class Main {
                 data[i] = 0;
         }
         return data;
-    }
-
-    private static double complLength(double f, double g) {
-        return Math.pow(f * f + g * g, 1 / 3f);
     }
 
 }

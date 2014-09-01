@@ -2,8 +2,6 @@ package su.drei.mp3extr;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
 import java.util.List;
 
 import org.jfree.chart.ChartFactory;
@@ -20,22 +18,7 @@ import org.jfree.ui.ApplicationFrame;
 
 public class Plot2D extends ApplicationFrame {
 
-	public static void main(String[] s){
-		byte b1=-5;
-		byte b2=-10;
-		ByteBuffer bb = ByteBuffer.wrap(new byte[]{b1,b2});
-
-	    bb.order(ByteOrder.BIG_ENDIAN);
-
-    	System.out.println(bb.getShort());
-    	int i1=b1;
-    	int i2=b2;
-    	
-    	System.out.println((i1<<8)|(i2&0xff));
-	}
-	
 	public Plot2D(final String title, List<? extends Number> bytes) {
-
         super(title);
 
         final XYDataset dataset = createDataset(bytes);
@@ -47,7 +30,6 @@ public class Plot2D extends ApplicationFrame {
     }
 	
 	public Plot2D(final String title, double[] bytes, double xResize) {
-
         super(title);
 
         final XYDataset dataset = createDataset(bytes, xResize);
