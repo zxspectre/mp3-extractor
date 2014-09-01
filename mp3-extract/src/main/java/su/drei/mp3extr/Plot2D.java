@@ -2,7 +2,6 @@ package su.drei.mp3extr;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
-import java.awt.Stroke;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.List;
@@ -73,33 +72,21 @@ public class Plot2D extends ApplicationFrame {
 	            false                     // urls
 	        );
 
-	        // NOW DO SOME OPTIONAL CUSTOMISATION OF THE CHART...
 	        chart.setBackgroundPaint(Color.white);
 
-//	        final StandardLegend legend = (StandardLegend) chart.getLegend();
-	  //      legend.setDisplaySeriesShapes(true);
-	        
 	        // get a reference to the plot for further customisation...
 	        final XYPlot plot = chart.getXYPlot();
 	        plot.setBackgroundPaint(Color.lightGray);
-	    //    plot.setAxisOffset(new Spacer(Spacer.ABSOLUTE, 5.0, 5.0, 5.0, 5.0));
 	        plot.setDomainGridlinePaint(Color.white);
 	        plot.setRangeGridlinePaint(Color.white);
-	        
-	       /* final XYLineAndShapeRenderer renderer = new XYLineAndShapeRenderer();
-	        renderer.setSeriesLinesVisible(0, false);
-	        renderer.setSeriesShapesVisible(1, false);
-	        plot.setRenderer(renderer);*/
 
 	        final SamplingXYLineRenderer renderer = new SamplingXYLineRenderer();
 	        renderer.setSeriesStroke(0, new BasicStroke(0.5f), true);
 	        plot.setRenderer(renderer);
 
 	        
-	        // change the auto tick unit selection to integer units only...
 	        final NumberAxis rangeAxis = (NumberAxis) plot.getRangeAxis();
 	        rangeAxis.setStandardTickUnits(NumberAxis.createIntegerTickUnits());
-	        // OPTIONAL CUSTOMISATION COMPLETED.
 	                
 	        return chart;
 	        
@@ -114,7 +101,6 @@ public class Plot2D extends ApplicationFrame {
 	        for(Number b: bytes){
 	        	series1.add(++pos, b);
 	        }
-
 
 	        final XYSeriesCollection dataset = new XYSeriesCollection();
 	        dataset.addSeries(series1);
