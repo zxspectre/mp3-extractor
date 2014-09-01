@@ -197,17 +197,17 @@ public class Main {
         
         //Hamming - looks ok
 //        for (int i = 0; i < data.length; i++) {
-//            res[i] = data[i] * 0.54 - 0.46 * Math.cos(2 * Math.PI * i / (data.length - 1));
+//            res[i] = data[i] * (0.54 - 0.46 * Math.cos(2 * Math.PI * i / (data.length - 1)));
 //        }
         
         //Blackman - 
 //        for (int i = 0; i < data.length; i++) {
-//            res[i] = data[i] * 0.42 - 0.5 * Math.cos (2 * Math.PI * i / (data.length - 1)) + 0.08 * Math.cos (4 * Math.PI * i / (data.length - 1));
+//            res[i] = data[i] * (0.42 - 0.5 * Math.cos (2 * Math.PI * i / (data.length - 1)) + 0.08 * Math.cos (4 * Math.PI * i / (data.length - 1)));
 //        }
 
         //Blackman - Harris 
         for (int i = 0; i < data.length; i++) {
-            res[i] = data[i] * 0.35875 - 0.48829 * Math.cos(2 * Math.PI * i /(data.length-1)) + 0.14128 * Math.cos(4 * Math.PI * i/(data.length-1)) - 0.01168 * Math.cos(6 * Math.PI  * i/(data.length-1));
+            res[i] = data[i] * (0.35875 - 0.48829 * Math.cos(2 * Math.PI * i /(data.length-1)) + 0.14128 * Math.cos(4 * Math.PI * i/(data.length-1)) - 0.01168 * Math.cos(6 * Math.PI  * i/(data.length-1)));
         }
 
         return res;
