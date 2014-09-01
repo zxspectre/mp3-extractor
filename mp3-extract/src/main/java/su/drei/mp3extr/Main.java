@@ -32,7 +32,7 @@ public class Main {
         String filePath = null;
 
         //for convenient audio parts spec.
-        int preset = 8;
+        int preset = 5;
         
         switch (preset) {
         case 1:
@@ -100,8 +100,11 @@ public class Main {
             int nBytesRead = 0;
             // loop over all data, until stream is empty
             while (nBytesRead != -1) {
-                // try to read data according to buffer length
-                nBytesRead = din.read(data, 0, data.length);
+                nBytesRead = 0;
+                // try to read data according to buffer length; repeat several times if unread data exists, but buffer was not filled.
+                while(nBytesRead != -1 && nBytesRead != data.length){
+                    nBytesRead += din.read(data, nBytesRead, data.length - nBytesRead);
+                }
                 final int framesCnt = nBytesRead / (channelsCount * 2);
                 // loop over channels in audio stream
                 for (int chNo = 0; chNo < channelsCount; chNo++) {
@@ -178,7 +181,7 @@ public class Main {
             // perform DFT
             freqDHist[chNo].add(doDFT(windowed_data));
             // save freq domain data
-            if (batchNo % 100 == 0) {
+            if (batchNo % 100 == 0 && chNo == 0) {
                 System.out.println("Handling batch No." + batchNo);
             }
         }
