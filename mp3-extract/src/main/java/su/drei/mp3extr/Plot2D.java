@@ -18,7 +18,7 @@ import org.jfree.ui.ApplicationFrame;
 
 public class Plot2D extends ApplicationFrame {
 
-	public Plot2D(final String title, List<? extends Number> bytes) {
+    public Plot2D(final String title, List<? extends Number> bytes) {
         super(title);
 
         final XYDataset dataset = createDataset(bytes);
@@ -28,8 +28,8 @@ public class Plot2D extends ApplicationFrame {
         setContentPane(chartPanel);
 
     }
-	
-	public Plot2D(final String title, double[] bytes, double xResize) {
+
+    public Plot2D(final String title, double[] bytes, double xResize) {
         super(title);
 
         final XYDataset dataset = createDataset(bytes, xResize);
@@ -39,76 +39,71 @@ public class Plot2D extends ApplicationFrame {
         setContentPane(chartPanel);
 
     }
-	
-	 private JFreeChart createChart(final XYDataset dataset) {
-	        
-	        // create the chart...
-	        final JFreeChart chart = ChartFactory.createXYLineChart(
-	            "Line Chart Demo 6",      // chart title
-	            "X",                      // x axis label
-	            "Y",                      // y axis label
-	            dataset,                  // data
-	            PlotOrientation.VERTICAL,
-	            true,                     // include legend
-	            true,                     // tooltips
-	            false                     // urls
-	        );
 
-	        chart.setBackgroundPaint(Color.white);
+    private JFreeChart createChart(final XYDataset dataset) {
 
-	        // get a reference to the plot for further customisation...
-	        final XYPlot plot = chart.getXYPlot();
-	        plot.setBackgroundPaint(Color.lightGray);
-	        plot.setDomainGridlinePaint(Color.white);
-	        plot.setRangeGridlinePaint(Color.white);
+        // create the chart...
+        final JFreeChart chart = ChartFactory.createXYLineChart("Line Chart Demo 6", // chart
+                                                                                     // title
+                "X", // x axis label
+                "Y", // y axis label
+                dataset, // data
+                PlotOrientation.VERTICAL, true, // include legend
+                true, // tooltips
+                false // urls
+                );
 
-	        final SamplingXYLineRenderer renderer = new SamplingXYLineRenderer();
-	        renderer.setSeriesStroke(0, new BasicStroke(0.5f), true);
-	        plot.setRenderer(renderer);
+        chart.setBackgroundPaint(Color.white);
 
-	        
-	        final NumberAxis rangeAxis = (NumberAxis) plot.getRangeAxis();
-	        rangeAxis.setStandardTickUnits(NumberAxis.createIntegerTickUnits());
-	                
-	        return chart;
-	        
-	    }
-	 
-	   
-	   
-	   private XYDataset createDataset(List<? extends Number> bytes) {
-	        System.out.println("Preparing dataset");
-	        final XYSeries series1 = new XYSeries("First");
-	        int pos = 0;
-	        for(Number b: bytes){
-	        	series1.add(++pos, b);
-	        }
+        // get a reference to the plot for further customisation...
+        final XYPlot plot = chart.getXYPlot();
+        plot.setBackgroundPaint(Color.lightGray);
+        plot.setDomainGridlinePaint(Color.white);
+        plot.setRangeGridlinePaint(Color.white);
 
-	        final XYSeriesCollection dataset = new XYSeriesCollection();
-	        dataset.addSeries(series1);
+        final SamplingXYLineRenderer renderer = new SamplingXYLineRenderer();
+        renderer.setSeriesStroke(0, new BasicStroke(0.5f), true);
+        plot.setRenderer(renderer);
 
-	        System.out.println("Preparing dataset. Done.");
-	                
-	        return dataset;
-	        
-	    }
-	   
-	   private XYDataset createDataset(double[] bytes, double xResize) {
-	        System.out.println("Preparing dataset");
-	        final XYSeries series1 = new XYSeries("First");
-	        int pos = 0;
-	        for(int i=0;i<bytes.length/2;i++){
-	        	series1.add(++pos*xResize, bytes[i]);
-	        }
+        final NumberAxis rangeAxis = (NumberAxis) plot.getRangeAxis();
+        rangeAxis.setStandardTickUnits(NumberAxis.createIntegerTickUnits());
 
+        return chart;
 
-	        final XYSeriesCollection dataset = new XYSeriesCollection();
-	        dataset.addSeries(series1);
+    }
 
-	        System.out.println("Preparing dataset. Done.");
-	                
-	        return dataset;
-	        
-	    }
-	   
+    private XYDataset createDataset(List<? extends Number> bytes) {
+        System.out.println("Preparing dataset");
+        final XYSeries series1 = new XYSeries("First");
+        int pos = 0;
+        for (Number b : bytes) {
+            series1.add(++pos, b);
+        }
+
+        final XYSeriesCollection dataset = new XYSeriesCollection();
+        dataset.addSeries(series1);
+
+        System.out.println("Preparing dataset. Done.");
+
+        return dataset;
+
+    }
+
+    private XYDataset createDataset(double[] bytes, double xResize) {
+        System.out.println("Preparing dataset");
+        final XYSeries series1 = new XYSeries("First");
+        int pos = 0;
+        for (int i = 0; i < bytes.length / 2; i++) {
+            series1.add(++pos * xResize, bytes[i]);
+        }
+
+        final XYSeriesCollection dataset = new XYSeriesCollection();
+        dataset.addSeries(series1);
+
+        System.out.println("Preparing dataset. Done.");
+
+        return dataset;
+
+    }
+
 }

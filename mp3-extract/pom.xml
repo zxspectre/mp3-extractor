@@ -20,20 +20,20 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
 	<artifactId>mp3plugin</artifactId>
 	<version>1.0</version>
 </dependency-->
-<dependency>
+<!--dependency>
 	<groupId>javazoom</groupId>
 	<artifactId>jlayer</artifactId>
 	<version>1.0.1</version>
 </dependency>
 <dependency>
 	<groupId>com.googlecode.soundlibs</groupId>
-	<artifactId>mp3spi</artifactId>
-	<version>1.9.5-1</version>
-</dependency>
-<dependency>
-	<groupId>com.googlecode.soundlibs</groupId>
 	<artifactId>tritonus-share</artifactId>
 	<version>0.3.7-1</version>
+</dependency-->
+<dependency>
+	<groupId>com.googlecode.soundlibs</groupId>
+	<artifactId>mp3spi</artifactId>
+	<version>1.9.5-1</version>
 </dependency>
 <dependency>
 	<groupId>jfree</groupId>
@@ -45,11 +45,17 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
 	<artifactId>jplot</artifactId>
 	<version>1.0</version>
 </dependency-->
-<dependency>
+<!--dependency>
 	<groupId>com.github.rwl</groupId>
 	<artifactId>jtransforms</artifactId>
 	<version>2.4.0</version>
+</dependency-->
+<dependency>
+	<groupId>org.apache.commons</groupId>
+	<artifactId>commons-math3</artifactId>
+	<version>3.2</version>
 </dependency>
+
 
 </dependencies>
 
