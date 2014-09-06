@@ -20,7 +20,7 @@ public class Main {
         String filePath = null;
 
         // for convenient audio parts spec.
-        int preset = 3;
+        int preset = 1;
 
         switch (preset) {
         case 1:

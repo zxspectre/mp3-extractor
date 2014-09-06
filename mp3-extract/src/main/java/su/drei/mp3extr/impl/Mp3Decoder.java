@@ -1,6 +1,8 @@
 package su.drei.mp3extr.impl;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.util.ArrayList;
 
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
@@ -29,12 +31,12 @@ public class Mp3Decoder {
             AudioFormat baseFormat = in.getFormat();
             AudioFormat decodedFormat = new AudioFormat(AudioFormat.Encoding.PCM_SIGNED, baseFormat.getSampleRate(), 16, baseFormat.getChannels(), baseFormat.getChannels() * 2, baseFormat.getSampleRate(), false);
             din = AudioSystem.getAudioInputStream(decodedFormat, in);
-
             process(decodedFormat, din);
         }
     }
 
     private void process(AudioFormat decodedFormat, AudioInputStream din) throws Exception {
+        long start = System.currentTimeMillis();
         exporter.init(decodedFormat.getSampleRate(), decodedFormat.getChannels());
         HistogramCreator histogrammer = new HistogramCreator(exporter, new BlackmanHarris(), true);
         final int channelsCount = decodedFormat.getChannels();
@@ -42,6 +44,7 @@ public class Mp3Decoder {
         int batchNo = 0;
         SourceDataLine line = getLine(decodedFormat);
         if (line != null) {
+            
             line.start();
             int nBytesRead = 0;
             // loop over all data, until stream is empty
@@ -97,6 +100,7 @@ public class Mp3Decoder {
             line.close();
             din.close();
         }
+        System.out.println("Processed in "+(System.currentTimeMillis() - start)+", 15600 +/- 100 old stat");
         exporter.flush();
     }
 
