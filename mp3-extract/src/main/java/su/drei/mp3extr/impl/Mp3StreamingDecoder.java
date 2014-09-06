@@ -1,5 +1,6 @@
 package su.drei.mp3extr.impl;
 
+import java.io.IOException;
 import java.util.Spliterator;
 import java.util.Spliterators;
 import java.util.stream.Collectors;
@@ -8,6 +9,7 @@ import java.util.stream.StreamSupport;
 
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.SourceDataLine;
 
 import su.drei.mp3extr.exporter.IDataExporter;
@@ -24,7 +26,7 @@ public class Mp3StreamingDecoder extends Mp3Decoder{
     }
 
     @Override
-    protected void process(AudioFormat decodedFormat, AudioInputStream din) throws Exception {
+    protected void process(AudioFormat decodedFormat, AudioInputStream din) throws LineUnavailableException, IOException  {
         long start = System.currentTimeMillis();
         exporter.init(decodedFormat.getSampleRate(), decodedFormat.getChannels());
         final int channelsCount = decodedFormat.getChannels();

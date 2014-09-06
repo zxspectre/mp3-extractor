@@ -52,6 +52,7 @@ public class PcmIterator implements Iterator<byte[]>{
         data = new byte[bufferSize];
         int nBytesRead = 0;
         int lastBufferRead = 0;
+        //TODO: bug here, see Mp3Decoder#readIntoBuffer
         while (lastBufferRead != -1 && nBytesRead != bufferSize) {
             lastBufferRead= din.read(data, nBytesRead, bufferSize - nBytesRead);
             nBytesRead +=lastBufferRead;

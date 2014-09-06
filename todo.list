@@ -2,7 +2,7 @@
  don't process silent (low vol) parts
   handle extreme values (short samples e.g.)
  export data in some format (series of freqDHist batches? e.g. ~5sec length) + mark style
- scan specified folder and handle all mp3 there
+ scan specified folder and handle all mp3 there (skip short mp3, as they aren't songs)
  currently DbConversion is performed on each channel, then averaging is being made to get 1 Histogram. Consider other choices (export stereo histogram-unlikely, perform averaging first, toDb - last)
  Performance: implement Mp3AveragingDecoder - which will average all channels before passing data to window-dft-toDb function chain 
 

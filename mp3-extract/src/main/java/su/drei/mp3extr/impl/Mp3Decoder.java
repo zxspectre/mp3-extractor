@@ -1,6 +1,7 @@
 package su.drei.mp3extr.impl;
 
 import java.io.File;
+import java.io.IOException;
 
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
@@ -15,7 +16,7 @@ import su.drei.mp3extr.impl.window.BlackmanHarris;
 public class Mp3Decoder {
 
     protected IDataExporter exporter;
-    protected HistogramCreator histogrammer; 
+    protected HistogramCreator histogrammer;
     protected final int bufferSize;
 
     public Mp3Decoder(IDataExporter exporter, int bufferSize) {
@@ -36,7 +37,7 @@ public class Mp3Decoder {
         }
     }
 
-    protected void process(AudioFormat decodedFormat, AudioInputStream din) throws Exception {
+    protected void process(AudioFormat decodedFormat, AudioInputStream din) throws LineUnavailableException, IOException {
         long start = System.currentTimeMillis();
         //init exporter 
         exporter.init(decodedFormat.getSampleRate(), decodedFormat.getChannels());
@@ -50,16 +51,10 @@ public class Mp3Decoder {
         if (line != null) {
             line.start();
             int nBytesRead = 0;
-            int lastBufferRead = 0;
             // loop over all data, until stream is empty
-            while (lastBufferRead != -1) {
-                nBytesRead = 0;
-                // try to read data according to buffer length; repeat several
-                // times if unread data exists, but buffer was not filled.
-                while (lastBufferRead != -1 && nBytesRead != data.length) {
-                    lastBufferRead = din.read(data, nBytesRead, data.length - nBytesRead);
-                    nBytesRead += lastBufferRead;
-                }
+            while (nBytesRead != -1) {
+                nBytesRead = readIntoBuffer(data, din);
+
                 final int framesCnt = nBytesRead / (channelsCount * 2);
                 // loop over channels in audio stream
                 for (int chNo = 0; chNo < channelsCount; chNo++) {
@@ -81,7 +76,7 @@ public class Mp3Decoder {
                     }
 
                     //TODO: move the code of processing each PCM batch to some exporter, which decides what to do with PCM
-                    
+
                     if (chNo == 1) {
                         // save amplitude data
                         exporter.exportPcmBatch(chNo, channelFrames);
@@ -92,8 +87,7 @@ public class Mp3Decoder {
                     if (nBytesRead == data.length) {
                         histogrammer.readHistogram(channelFrames, chNo, batchNo);
                     }
-                    
-                    
+
                 }
                 // finished looping over channels, read next buffer from audio
                 // stream
@@ -105,8 +99,33 @@ public class Mp3Decoder {
             line.close();
             din.close();
         }
-        System.out.println("Processed in "+(System.currentTimeMillis() - start)+", 16000 old stat");
+        System.out.println("Processed in " + (System.currentTimeMillis() - start) + ", 16000 old stat");
         exporter.flush();
+    }
+
+    protected int readIntoBuffer(byte[] data, AudioInputStream din) throws IOException {
+        int totalBytesRead = 0;
+        int lastBufferRead = 0;
+        // try to read data according to buffer length; repeat several
+        // times if unread data exists, but buffer was not filled.
+        while (totalBytesRead != data.length) {
+            try {
+                lastBufferRead = din.read(data, totalBytesRead, data.length - totalBytesRead);
+            } catch (ArrayIndexOutOfBoundsException e) {
+                // workaround for javazoom bug (it doesn't like some kind of meta-info in mp3)
+                // just skip the rest of the file in this case, as (hopefully) it occurs on the last buffer.
+                // System.err.println("[warn] index out of bounds while reading stream batch");
+                totalBytesRead = -1;
+                break;
+            }
+            //if last read couldn't get any data, then we can't fill the buffer, abort and return -1;
+            if (lastBufferRead == -1) {
+                totalBytesRead = -1;
+                break;
+            }
+            totalBytesRead += lastBufferRead;
+        }
+        return totalBytesRead;
     }
 
     protected SourceDataLine getLine(AudioFormat audioFormat) throws LineUnavailableException {

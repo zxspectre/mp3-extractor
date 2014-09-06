@@ -6,7 +6,7 @@ import su.drei.mp3extr.impl.Mp3ThreadedDecoder;
 
 public class Test {
 
-    public static final int BUFFER_SIZE = 4096;
+    public static final int BUFFER_SIZE = 8192;
     
     // parameters specifying for what mp3 part histogram is built
     static float total_length = 100f;
@@ -31,7 +31,7 @@ public class Test {
             filePath = "D:\\music\\ZZ Top\\1970 - First Album\\Zz Top - Backdoor Love Affair.mp3";
             break;
         case 2:
-            filePath = "D:\\music\\Classical\\Shalyapin\\Staroe_-_Shalyapin_-_Mussorgsky_Boris_Godunov.mp3";
+            filePath = "D:\\music\\Iron Maiden\\1990 No Prayer For The Dying\\10 - Mother Russia.mp3";
             break;
         case 3:
             total_length = 106.449f;

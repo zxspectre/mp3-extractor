@@ -1,5 +1,6 @@
 package su.drei.mp3extr.impl;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -9,6 +10,7 @@ import java.util.concurrent.Future;
 
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.SourceDataLine;
 
 import su.drei.mp3extr.exporter.IDataExporter;
@@ -32,7 +34,9 @@ public class Mp3ThreadedDecoder extends Mp3Decoder {
     }
 
     @Override
-    protected void process(AudioFormat decodedFormat, AudioInputStream din) throws Exception {
+    protected void process(AudioFormat decodedFormat, AudioInputStream din) throws IOException, LineUnavailableException {
+        System.out.println(String.format("Sample rate %s, channels=%s", decodedFormat.getSampleRate(), decodedFormat.getChannels()));
+
         long start = System.currentTimeMillis();
         // init exporter
         exporter.init(decodedFormat.getSampleRate(), decodedFormat.getChannels());
@@ -51,21 +55,19 @@ public class Mp3ThreadedDecoder extends Mp3Decoder {
             int nBytesRead = 0;
             int lastBufferRead = 0;
             // loop over all data, until stream is empty
-            while (lastBufferRead != -1) {
-                nBytesRead = 0;
-                // try to read data according to buffer length; repeat several
-                // times if unread data exists, but buffer was not filled.
-                while (lastBufferRead != -1 && nBytesRead != data.length) {
-                    lastBufferRead = din.read(data, nBytesRead, data.length - nBytesRead);
-                    nBytesRead += lastBufferRead;
-                }
+            while (nBytesRead != -1) {
+                nBytesRead = readIntoBuffer(data, din);
                 // skip leftover data
                 if (nBytesRead == bufferSize) {
                     List<ChannelHandler> taskList = new ArrayList<>();
                     for (int chNo = 0; chNo < channelsCount; chNo++) {
                         taskList.add(new ChannelHandler(chNo));
                     }
-                    pool.invokeAll(taskList);
+                    try {
+                        pool.invokeAll(taskList);
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException("Programmer error 0_0", e);
+                    }
                 }
 
                 // finished looping over channels, read next buffer from audio
@@ -82,8 +84,6 @@ public class Mp3ThreadedDecoder extends Mp3Decoder {
         System.out.println("Processed in " + (System.currentTimeMillis() - start) + ", 16000 old stat");
         exporter.flush();
     }
-    
-    
 
     class ChannelHandler implements Callable<Boolean> {
         int chNo;
