@@ -15,6 +15,7 @@ import su.drei.mp3extr.impl.window.BlackmanHarris;
 public class Mp3Decoder {
 
     protected IDataExporter exporter;
+    protected HistogramCreator histogrammer; 
     protected final int bufferSize;
 
     public Mp3Decoder(IDataExporter exporter, int bufferSize) {
@@ -24,25 +25,29 @@ public class Mp3Decoder {
 
     public void readPCM(String filename) throws Exception {
         File file = new File(filename);
+        //try open audio input stream from file
         try (AudioInputStream in = AudioSystem.getAudioInputStream(file)) {
-            AudioInputStream din = null;
             AudioFormat baseFormat = in.getFormat();
             AudioFormat decodedFormat = new AudioFormat(AudioFormat.Encoding.PCM_SIGNED, baseFormat.getSampleRate(), 16, baseFormat.getChannels(), baseFormat.getChannels() * 2, baseFormat.getSampleRate(), false);
-            din = AudioSystem.getAudioInputStream(decodedFormat, in);
+            //create decoded input stream
+            AudioInputStream din = AudioSystem.getAudioInputStream(decodedFormat, in);
+            //process stream
             process(decodedFormat, din);
         }
     }
 
     protected void process(AudioFormat decodedFormat, AudioInputStream din) throws Exception {
         long start = System.currentTimeMillis();
+        //init exporter 
         exporter.init(decodedFormat.getSampleRate(), decodedFormat.getChannels());
-        HistogramCreator histogrammer = new HistogramCreator(exporter, new BlackmanHarris(), true);
+        //create histogram calculator
+        histogrammer = new HistogramCreator(exporter, new BlackmanHarris(), true);
+        //init variables
         final int channelsCount = decodedFormat.getChannels();
         byte[] data = new byte[bufferSize];
         int batchNo = 0;
         SourceDataLine line = getLine(decodedFormat);
         if (line != null) {
-            
             line.start();
             int nBytesRead = 0;
             int lastBufferRead = 0;
@@ -100,7 +105,7 @@ public class Mp3Decoder {
             line.close();
             din.close();
         }
-        System.out.println("Processed in "+(System.currentTimeMillis() - start)+", 15600 +/- 100 old stat");
+        System.out.println("Processed in "+(System.currentTimeMillis() - start)+", 16000 old stat");
         exporter.flush();
     }
 

@@ -6,8 +6,7 @@
  test compatibility with diff. formats of mp3
  extract vector every 1/16th at 120 bpm, but take fft batch of at least 4096 (if it can't  be done - use sliding window or ignore mp3)
  currently DbConversion is performed on each channel, then averaging is being made to get 1 Histogram. Consider other choices (export stereo histogram-unlikely, perform averaging first, toDb - last)
- double seems to slow program a bit - check float
-
+ 
 Resolved:
  handle end of the buffer (or discard it?)
  rewrite using stream API (doesn't seem to improve much)

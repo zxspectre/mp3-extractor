@@ -2,7 +2,7 @@ package su.drei.mp3extr;
 
 import su.drei.mp3extr.exporter.InMemoryPlottingExporter;
 import su.drei.mp3extr.impl.Mp3Decoder;
-import su.drei.mp3extr.impl.Mp3StreamingDecoder;
+import su.drei.mp3extr.impl.Mp3ThreadedDecoder;
 
 public class Main {
 
@@ -21,7 +21,7 @@ public class Main {
         String filePath = null;
 
         // for convenient audio parts spec.
-        int preset = 3;
+        int preset = 1;
 
         switch (preset) {
         case 1:
@@ -59,7 +59,7 @@ public class Main {
         x_pos = (sample_start + sample_end) / 2 / total_length;
         x_width = (sample_end - sample_start) / total_length;
 
-        Mp3Decoder mp3dec = new Mp3Decoder(new InMemoryPlottingExporter(x_pos, x_width), BUFFER_SIZE);
+        Mp3Decoder mp3dec = new Mp3ThreadedDecoder(new InMemoryPlottingExporter(x_pos, x_width), BUFFER_SIZE);
 
         mp3dec.readPCM(filePath);
 

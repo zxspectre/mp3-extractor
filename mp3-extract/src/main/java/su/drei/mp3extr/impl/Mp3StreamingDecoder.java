@@ -50,7 +50,7 @@ public class Mp3StreamingDecoder extends Mp3Decoder{
             line.close();
             din.close();
         }
-        System.out.println("Processed in "+(System.currentTimeMillis() - start)+", 15600 +/- 100 old stat");
+        System.out.println("Processed in "+(System.currentTimeMillis() - start)+", 16000 old stat");
         exporter.flush();
     }
 
