@@ -4,7 +4,7 @@ import su.drei.mp3extr.exporter.InMemoryPlottingExporter;
 import su.drei.mp3extr.impl.Mp3Decoder;
 import su.drei.mp3extr.impl.Mp3ThreadedDecoder;
 
-public class Main {
+public class Test {
 
     public static final int BUFFER_SIZE = 4096;
     
