@@ -1,8 +1,6 @@
 package su.drei.mp3extr.impl;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.util.ArrayList;
 
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
@@ -16,8 +14,8 @@ import su.drei.mp3extr.impl.window.BlackmanHarris;
 
 public class Mp3Decoder {
 
-    private IDataExporter exporter;
-    private final int bufferSize;
+    protected IDataExporter exporter;
+    protected final int bufferSize;
 
     public Mp3Decoder(IDataExporter exporter, int bufferSize) {
         this.exporter = exporter;
@@ -35,7 +33,7 @@ public class Mp3Decoder {
         }
     }
 
-    private void process(AudioFormat decodedFormat, AudioInputStream din) throws Exception {
+    protected void process(AudioFormat decodedFormat, AudioInputStream din) throws Exception {
         long start = System.currentTimeMillis();
         exporter.init(decodedFormat.getSampleRate(), decodedFormat.getChannels());
         HistogramCreator histogrammer = new HistogramCreator(exporter, new BlackmanHarris(), true);
@@ -47,18 +45,20 @@ public class Mp3Decoder {
             
             line.start();
             int nBytesRead = 0;
+            int lastBufferRead = 0;
             // loop over all data, until stream is empty
-            while (nBytesRead != -1) {
+            while (lastBufferRead != -1) {
                 nBytesRead = 0;
                 // try to read data according to buffer length; repeat several
                 // times if unread data exists, but buffer was not filled.
-                while (nBytesRead != -1 && nBytesRead != data.length) {
-                    nBytesRead += din.read(data, nBytesRead, data.length - nBytesRead);
+                while (lastBufferRead != -1 && nBytesRead != data.length) {
+                    lastBufferRead = din.read(data, nBytesRead, data.length - nBytesRead);
+                    nBytesRead += lastBufferRead;
                 }
                 final int framesCnt = nBytesRead / (channelsCount * 2);
                 // loop over channels in audio stream
                 for (int chNo = 0; chNo < channelsCount; chNo++) {
-                    int[] channelFrames = new int[framesCnt];
+                    double[] channelFrames = new double[framesCnt];
                     // loop over frames for one channel only
                     for (int pos = 0; pos < framesCnt; pos++) {
                         // get two bytes and glue 'em together
@@ -104,7 +104,7 @@ public class Mp3Decoder {
         exporter.flush();
     }
 
-    private SourceDataLine getLine(AudioFormat audioFormat) throws LineUnavailableException {
+    protected SourceDataLine getLine(AudioFormat audioFormat) throws LineUnavailableException {
         SourceDataLine res = null;
         DataLine.Info info = new DataLine.Info(SourceDataLine.class, audioFormat);
         res = (SourceDataLine) AudioSystem.getLine(info);

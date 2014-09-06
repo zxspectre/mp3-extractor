@@ -2,6 +2,7 @@ package su.drei.mp3extr;
 
 import su.drei.mp3extr.exporter.InMemoryPlottingExporter;
 import su.drei.mp3extr.impl.Mp3Decoder;
+import su.drei.mp3extr.impl.Mp3StreamingDecoder;
 
 public class Main {
 
@@ -20,7 +21,7 @@ public class Main {
         String filePath = null;
 
         // for convenient audio parts spec.
-        int preset = 1;
+        int preset = 3;
 
         switch (preset) {
         case 1:

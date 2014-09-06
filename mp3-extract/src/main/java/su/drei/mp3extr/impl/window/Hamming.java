@@ -2,7 +2,7 @@ package su.drei.mp3extr.impl.window;
 
 public class Hamming implements IWindowFunc {
 
-    public double[] window(int[] data) {
+    public double[] window(double[] data) {
         double[] res = new double[data.length];
 
         // Hamming - looks ok

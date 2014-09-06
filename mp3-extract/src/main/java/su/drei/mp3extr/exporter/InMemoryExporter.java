@@ -7,7 +7,7 @@ public class InMemoryExporter implements IDataExporter {
 
     // array (by channel) of list(batch no) of doubles(histogram itself)...
     protected List<double[]>[] freqDHist = null;
-    protected List<Integer> bytes = new ArrayList<>();
+    protected List<Double> bytes = new ArrayList<>();
 
     protected float sampleRate;
     protected int channels;
@@ -24,7 +24,7 @@ public class InMemoryExporter implements IDataExporter {
     }
 
     @Override
-    public void exportPcmBatch(int channel, int[] pcm) {
+    public void exportPcmBatch(int channel, double[] pcm) {
         if (freqDHist == null) {
             throw new RuntimeException("Must init this exporter first");
         }

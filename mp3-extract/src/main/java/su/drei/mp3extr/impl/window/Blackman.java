@@ -2,7 +2,7 @@ package su.drei.mp3extr.impl.window;
 
 public class Blackman implements IWindowFunc {
 
-    public double[] window(int[] data) {
+    public double[] window(double[] data) {
         double[] res = new double[data.length];
         // Blackman -
         for (int i = 0; i < data.length; i++) {
