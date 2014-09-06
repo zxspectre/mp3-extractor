@@ -7,7 +7,7 @@ import su.drei.mp3extr.impl.Mp3ThreadedDecoder;
 
 public class Test {
 
-    public static final int BUFFER_SIZE = 8192;
+    public static final int BUFFER_SIZE = 4096;
     
     // parameters specifying for what mp3 part histogram is built
     static float total_length = 100f;
@@ -32,7 +32,7 @@ public class Test {
             filePath = "D:\\music\\ZZ Top\\1970 - First Album\\Zz Top - Backdoor Love Affair.mp3";
             break;
         case 2:
-            filePath = "D:\\music\\Iron Maiden\\1990 No Prayer For The Dying\\10 - Mother Russia.mp3";
+            filePath = "D:\\music\\Deftones\\1997 - Around The Fur\\10 - Mx + Damone (hidden track).mp3";
             break;
         case 3:
             total_length = 106.449f;
@@ -69,7 +69,11 @@ public class Test {
 
     }
     
-    /** 07/09/2014 
+    /** 07/09/2014
+     *  
+"D:\\music\\Deftones\\1997 - Around The Fur\\10 - Mx + Damone (hidden track).mp3"  - GOOD SAMPLE FOR SILENCE SKIPPING     
+     * 
+     * 
 Rate 44100.0, channels 2 for file D:\music\Accept\1979-Accept\01-Lady Lou.mp3 
 One dft batch equals to 23.219954ms
 Histograms have 2 channels, 637 dft batches and 1024 dft size while having samplRate=44100.0
