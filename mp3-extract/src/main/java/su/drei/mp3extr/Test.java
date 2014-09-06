@@ -1,5 +1,6 @@
 package su.drei.mp3extr;
 
+import su.drei.mp3extr.exporter.InMemoryExporter;
 import su.drei.mp3extr.exporter.InMemoryPlottingExporter;
 import su.drei.mp3extr.impl.Mp3Decoder;
 import su.drei.mp3extr.impl.Mp3ThreadedDecoder;
@@ -60,8 +61,11 @@ public class Test {
         x_width = (sample_end - sample_start) / total_length;
 
         Mp3Decoder mp3dec = new Mp3ThreadedDecoder(new InMemoryPlottingExporter(x_pos, x_width), BUFFER_SIZE);
+//        Mp3Decoder mp3dec = new Mp3ThreadedDecoder(new InMemoryExporter(), BUFFER_SIZE);
 
         mp3dec.readPCM(filePath);
+        
+//        while(true) Thread.sleep(10000);
 
     }
     

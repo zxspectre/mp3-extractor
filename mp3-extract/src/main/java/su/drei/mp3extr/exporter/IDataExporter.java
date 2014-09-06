@@ -4,9 +4,9 @@ public interface IDataExporter {
 
     void init(float sampleRate, int channels);
 
-    void exportPcmBatch(int channel, double[] pcm);
+    void exportPcmBatch(int channel, float[] pcm);
 
-    void exportFrequencyDomainBatch(int channel, double[] freqDomainBatch);
+    void exportFrequencyDomainBatch(int channel, float[] freqDomainBatch);
 
     void flush();
 

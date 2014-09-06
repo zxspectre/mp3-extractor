@@ -29,7 +29,7 @@ public class Plot2D extends ApplicationFrame {
 
     }
 
-    public Plot2D(final String title, double[] bytes, double xResize) {
+    public Plot2D(final String title, float[] bytes, double xResize) {
         super(title);
 
         final XYDataset dataset = createDataset(bytes, xResize);
@@ -89,7 +89,7 @@ public class Plot2D extends ApplicationFrame {
 
     }
 
-    private XYDataset createDataset(double[] bytes, double xResize) {
+    private XYDataset createDataset(float[] bytes, double xResize) {
         System.out.println("Preparing dataset");
         final XYSeries series1 = new XYSeries("First");
         int pos = 0;

@@ -6,8 +6,8 @@ import java.util.List;
 public class InMemoryExporter implements IDataExporter {
 
     // array (by channel) of list(batch no) of doubles(histogram itself)...
-    protected List<double[]>[] freqDHist = null;
-    protected List<Double> bytes = new ArrayList<>();
+    protected List<float[]>[] freqDHist = null;
+    protected List<Float> bytes = new ArrayList<>();
 
     protected float sampleRate;
     protected int channels;
@@ -18,23 +18,24 @@ public class InMemoryExporter implements IDataExporter {
         // init freq domain histogram variable
         freqDHist = new ArrayList[channels];
         for (int i = 0; i < channels; i++) {
-            freqDHist[i] = new ArrayList<double[]>();
+            freqDHist[i] = new ArrayList<float[]>();
         }
 
     }
 
     @Override
-    public void exportPcmBatch(int channel, double[] pcm) {
-        if (freqDHist == null) {
-            throw new RuntimeException("Must init this exporter first");
-        }
-        for (int i = 0; i < pcm.length; i++) {
-            bytes.add(pcm[i]);
-        }
+    public void exportPcmBatch(int channel, float[] pcm) {
+        //not needed for now
+        //        if (freqDHist == null) {
+        //            throw new RuntimeException("Must init this exporter first");
+        //        }
+        //        for (int i = 0; i < pcm.length; i++) {
+        //            bytes.add(pcm[i]);
+        //        }
     }
 
     @Override
-    public void exportFrequencyDomainBatch(int channel, double[] freqDomainBatch) {
+    public void exportFrequencyDomainBatch(int channel, float[] freqDomainBatch) {
         if (freqDHist == null) {
             throw new RuntimeException("Must init this exporter first");
         }
@@ -42,6 +43,7 @@ public class InMemoryExporter implements IDataExporter {
             System.out.println("Handling batch No." + freqDHist[0].size());
         }
         freqDHist[channel].add(freqDomainBatch);
+//        if(freqDHist[channel].size() > 128) freqDHist[channel].clear();
     }
 
     @Override

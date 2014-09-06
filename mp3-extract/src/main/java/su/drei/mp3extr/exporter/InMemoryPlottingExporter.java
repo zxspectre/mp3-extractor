@@ -53,8 +53,8 @@ public class InMemoryPlottingExporter extends InMemoryExporter {
      *            'around 'pos'
      * @return average hist
      */
-    private double[] getSum(List<double[]>[] freqDHist, int pos) {
-        double[] res = new double[freqDHist[0].get(0).length];
+    private float[] getSum(List<float[]>[] freqDHist, int pos) {
+        float[] res = new float[freqDHist[0].get(0).length];
         int window = Math.round(freqDHist[0].size() * x_width);
         System.out.println("Windows width is " + window);
         // sum over buffer batches

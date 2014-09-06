@@ -17,12 +17,12 @@ public class HistogramCreator {
         this.useDb = convertToDb;
     }
 
-    public void readHistogram(double[] data, int chNo, int batchNo) {
+    public void readHistogram(float[] data, int chNo, int batchNo) {
         // apply window function
-        double[] windowed_data = windowFunction.window(data);
+        float[] windowed_data = windowFunction.window(data);
 
         // perform DFT
-        double[] freqDomainBatch = doDFT(windowed_data);
+        float[] freqDomainBatch = doDFT(windowed_data);
         // scale to Db
         if (useDb) {
             freqDomainBatch = toDb(freqDomainBatch);
@@ -31,16 +31,16 @@ public class HistogramCreator {
         exporter.exportFrequencyDomainBatch(chNo, freqDomainBatch);
     }
 
-    static double[] doDFT(double[] data) {
+    static float[] doDFT(float[] data) {
         Complex[] x = new Complex[data.length];
         for (int i = 0; i < data.length; i++) {
             x[i] = new Complex(data[i], 0);
         }
 
         Complex[] y = fft(x);
-        double[] res = new double[y.length];
+        float[] res = new float[y.length];
         for (int i = 0; i < y.length; i++) {
-            res[i] = Math.pow(Math.pow(y[i].getReal(), 2) + Math.pow(y[i].getImaginary(), 2), 1 / 3f);
+            res[i] = (float) Math.pow(Math.pow(y[i].getReal(), 2) + Math.pow(y[i].getImaginary(), 2), 1 / 3f);
         }
 
         return res;
@@ -90,11 +90,11 @@ public class HistogramCreator {
      *            input histogram
      * @return db converted hist
      */
-    static double[] toDb(double[] data) {
+    static float[] toDb(float[] data) {
         for (int i = 0; i < data.length; i++) {
-            double temp = (data[i] / data.length);
+            float temp = (data[i] / data.length);
             if (temp > 0.0)
-                data[i] = 10 * Math.log10(temp);
+                data[i] = (float) (10 * Math.log10(temp));
             else
                 data[i] = 0;
         }

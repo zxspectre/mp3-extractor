@@ -58,7 +58,7 @@ public class Mp3Decoder {
                 final int framesCnt = nBytesRead / (channelsCount * 2);
                 // loop over channels in audio stream
                 for (int chNo = 0; chNo < channelsCount; chNo++) {
-                    double[] channelFrames = new double[framesCnt];
+                    float[] channelFrames = new float[framesCnt];
                     // loop over frames for one channel only
                     for (int pos = 0; pos < framesCnt; pos++) {
                         // get two bytes and glue 'em together
