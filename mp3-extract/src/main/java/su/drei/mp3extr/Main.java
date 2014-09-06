@@ -21,7 +21,7 @@ public class Main {
         String filePath = null;
 
         // for convenient audio parts spec.
-        int preset = 1;
+        int preset = 2;
 
         switch (preset) {
         case 1:
@@ -31,7 +31,7 @@ public class Main {
             filePath = "D:\\music\\ZZ Top\\1970 - First Album\\Zz Top - Backdoor Love Affair.mp3";
             break;
         case 2:
-            filePath = "D:\\music\\effects\\SDuncan\\SH-8\\neck_cl.mp3";
+            filePath = "D:\\music\\Classical\\Shalyapin\\Staroe_-_Shalyapin_-_Mussorgsky_Boris_Godunov.mp3";
             break;
         case 3:
             total_length = 106.449f;
@@ -64,5 +64,23 @@ public class Main {
         mp3dec.readPCM(filePath);
 
     }
+    
+    /** 07/09/2014 
+Rate 44100.0, channels 2 for file D:\music\Accept\1979-Accept\01-Lady Lou.mp3 
+One dft batch equals to 23.219954ms
+Histograms have 2 channels, 637 dft batches and 1024 dft size while having samplRate=44100.0
+
+Rate 48000.0, channels 2 for file D:\music\Arch Enemy\2014 War Eternal\01. Tempore Nihil Sanat (Prelude in F minor).mp3
+One dft batch equals to 21.333334ms
+Histograms have 2 channels, 3376 dft batches and 1024 dft size while having samplRate=48000.0
+
+Rate 44100.0, channels 1 for file D:\music\Classical\Frederic Chopin\else\Piano by candlelight (disc - 3) - Classical music - Chopin -.mp3
+One dft batch equals to 46.439907ms
+Histograms have 1 channels, 2965 dft batches and 2048 dft size while having samplRate=44100.0
+
+Rate 11025.0, channels 1 for file D:\music\Classical\Shalyapin\Staroe_-_Shalyapin_-_Mussorgsky_Boris_Godunov.mp3
+One dft batch equals to 185.75963ms
+Histograms have 1 channels, 378 dft batches and 2048 dft size while having samplRate=11025.0
+     */
 
 }
