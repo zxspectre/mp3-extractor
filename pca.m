@@ -1,14 +1,26 @@
-function pca(batch15, batch16)
+function [S] = pca(batch1, batch2, batch15, batch16)
 
-y=batch16';
+a=batch1';
+b=batch2';
 x=batch15';
-xy=[x;y];
+y=batch16';
+
+xy=[a;b;x;y];
 sigma=xy'*xy;
 sigma=sigma./size(xy,1);
 [U,S,V]=svd(sigma);
-Z=x*U(:,1:2);
-Z2=y*U(:,1:2);
-Zall=[Z;Z2];
-palette=hsv(3);
-colors=[ones(size(Z,1),3).*palette(1,:);ones(size(Z2,1),3).*palette(2,:)];
-scatter(Zall(:,1),Zall(:,2),5,colors);
+
+Z1=a*U(:,1:2);
+Z2=b*U(:,1:2);
+Z3=x*U(:,1:2);
+Z4=y*U(:,1:2);
+Zall=[Z1;Z2;Z3;Z4];
+
+palette=hsv(5);
+colors=[ones(size(Z1,1),3).*palette(1,:);
+	ones(size(Z2,1),3).*palette(2,:);
+	ones(size(Z3,1),3).*palette(3,:);
+	ones(size(Z4,1),3).*palette(4,:)];
+scatter(Zall(:,1),Zall(:,2),8,colors);
+
+

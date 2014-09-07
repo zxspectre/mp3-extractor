@@ -32,6 +32,9 @@ public class Mp3Decoder {
             AudioFormat decodedFormat = new AudioFormat(AudioFormat.Encoding.PCM_SIGNED, baseFormat.getSampleRate(), 16, baseFormat.getChannels(), baseFormat.getChannels() * 2, baseFormat.getSampleRate(), false);
             //create decoded input stream
             AudioInputStream din = AudioSystem.getAudioInputStream(decodedFormat, in);
+            if(decodedFormat.getSampleRate() != 44100 || decodedFormat.getChannels()!=2){
+                throw new RuntimeException("Only 44100Hz, 2 channel is supported ATM");
+            }
             //process stream
             process(decodedFormat, din);
         }

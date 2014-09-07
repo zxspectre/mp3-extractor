@@ -14,6 +14,7 @@ import com.jmatio.types.MLSingle;
 
 /**
  * Currently it's in-memory in fact
+ * 
  * @author loki
  *
  */
@@ -25,6 +26,11 @@ public class MatFileExporter implements IDataExporter {
 
     protected float sampleRate;
     protected int channels;
+    protected String varName;
+    
+    public MatFileExporter(String varName){
+        this.varName=varName;
+    }
 
     @Override
     public void init(float sampleRate, int channels) {
@@ -59,7 +65,7 @@ public class MatFileExporter implements IDataExporter {
     @Override
     public void flush() {
         int batchSize = freqDHist[0].get(0).length;
-        int batchBatchSize = 500;
+        int batchBatchSize = 125;
         int batchBatch = 0;
         try {
             List<MLArray> list = new ArrayList<MLArray>();
@@ -73,23 +79,30 @@ public class MatFileExporter implements IDataExporter {
                     }
                 }
                 if (++subBatch == batchBatchSize) {
-                    if (batchBatch == 11) {
-                        Plot2D demo2 = new Plot2D("Freqdomain 1", batch, sampleRate / freqDHist[0].get(0).length);
-                        // Plot2D demo2 = new Plot2D("Freqdomain 1",
-                        // toDb(computeLengths(freqDHist.get(301))));
-                        demo2.pack();
-                        RefineryUtilities.centerFrameOnScreen(demo2);
-                        demo2.setVisible(true);
+                    //debug code - plot batchBatch
+                    //                    if (batchBatch == 11) {
+                    //                        Plot2D demo2 = new Plot2D("Freqdomain 1", batch, sampleRate / freqDHist[0].get(0).length);
+                    //                        // Plot2D demo2 = new Plot2D("Freqdomain 1",
+                    //                        // toDb(computeLengths(freqDHist.get(301))));
+                    //                        demo2.pack();
+                    //                        RefineryUtilities.centerFrameOnScreen(demo2);
+                    //                        demo2.setVisible(true);
+                    //                    }
+
+                    //TODO: test code, for now export only the middle of the song
+                    if ((int)(freqDHist[0].size() / batchBatchSize / 2) == batchBatch) {
+                        //write 150 hists in 1 array
+                        MLSingle mlTriple = new MLSingle(varName + batchBatch, batch, batchSize );
+                        list.add(mlTriple);
                     }
-                    //write 150 hists in 1 array
-                    MLSingle mlTriple = new MLSingle("batch" + batchBatch++, batch, batchSize*4);
-                    list.add(mlTriple);
                     subBatch = 0;
+                    batchBatch++;
                     batch = new Float[batchSize * batchBatchSize];
                     clearArray(batch);
                 }
             }
-            new MatFileWriter("mat_file.mat", list);
+            //            System.out.println(String.format("Total lists %s, expected=%s",list.size(), freqDHist[0].size() / batchBatchSize));
+            new MatFileWriter("../out.mat", list);
 
         } catch (Exception e) {
             e.printStackTrace();

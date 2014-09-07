@@ -30,38 +30,47 @@ public class Test {
         String filePath = null;
 
         // for convenient audio parts spec.
-        int preset = 1;
+        int preset =4;
+        String VAR_NAME = "SONG";
 
         switch (preset) {
         case 1:
             total_length = 161.985f;
             sample_start = 23f;
             sample_end = 25f;
-            filePath = "D:\\music\\ZZ Top\\1970 - First Album\\Zz Top - Backdoor Love Affair.mp3";
+            filePath = "D:\\music\\Black label society\\Black Label Society - The Blessed Hellride\\Black Label Society - Funeral Bell.mp3";
+            VAR_NAME = "BLS1";
             break;
         case 2:
-            filePath = "D:\\music\\Deftones\\1997 - Around The Fur\\10 - Mx + Damone (hidden track).mp3";
+            filePath = "D:\\music\\Black label society\\Black Label Society - The Blessed Hellride\\Black Label Society - Destruction Overdrive.mp3";
+            VAR_NAME = "BLS2";
             break;
         case 3:
             total_length = 106.449f;
             sample_start = 52f;
             sample_end = 53.5f;
-            filePath = "D:\\music\\Graveworm\\2001 - Scourge Of Malice\\01 - Dreaded Time.mp3";
+            filePath = "D:\\music\\Summoning\\2006 - Oath Bound\\03-summoning-mirdautas_vras-qtxmp3.mp3";
+            VAR_NAME = "SUMM";
             break;
         case 4:
-            filePath = "../100hz.mp3";
+            filePath = "D:\\music\\Classical\\Vivaldi\\Vivaldi_Spring2.mp3";
+            VAR_NAME = "VIV";
             break;
         case 5:
-            filePath = "../5kHz-10db.mp3";
+            filePath = "D:\\music\\AcDc\\1975 - T.N.T\\05-T.N.T..mp3";
+            VAR_NAME = "ACDC";
             break;
         case 6:
-            filePath = "../800Hz-10db.mp3";
+            filePath = "D:\\music\\Children Of Bodom\\Children Of Bodom'2002 - 'Hate Crew Deathroll'\\05 - Angels Don't Kill.mp3";
+            VAR_NAME = "COB";
             break;
         case 7:
-            filePath = "../5-11kHz_10db.wav";
+            filePath = "D:\\downloads\\Shakira - Dare (La La La).mp3";
+            VAR_NAME = "SHA";
             break;
         case 8:
-            filePath = "../5-11kHz_fadeout.wav";
+            filePath = "D:\\downloads\\18-Calyx & Teebee Feat. Kemo - Pure Gold.mp3";
+            VAR_NAME = "CAL";
             break;
         }
 
@@ -70,7 +79,8 @@ public class Test {
 
 //        Mp3Decoder mp3dec = new Mp3ThreadedDecoder(new InMemoryPlottingExporter(x_pos, x_width), BUFFER_SIZE);
 //        Mp3Decoder mp3dec = new Mp3ThreadedDecoder(new PcaExporter(), BUFFER_SIZE);
-        Mp3Decoder mp3dec = new Mp3ThreadedDecoder(new MatFileExporter(), BUFFER_SIZE);
+        Mp3Decoder mp3dec = new Mp3ThreadedDecoder(new MatFileExporter(VAR_NAME), BUFFER_SIZE);
+        
 
 //        Mp3Decoder mp3dec = new Mp3ThreadedDecoder(new InMemoryExporter(), BUFFER_SIZE);
 
