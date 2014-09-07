@@ -37,7 +37,26 @@ public class Plot2D extends ApplicationFrame {
         final ChartPanel chartPanel = new ChartPanel(chart);
         chartPanel.setPreferredSize(new java.awt.Dimension(500, 270));
         setContentPane(chartPanel);
+    }
+    
+    public Plot2D(final String title, double[] bytes, double xResize) {
+        super(title);
 
+        final XYDataset dataset = createDataset(bytes, xResize);
+        final JFreeChart chart = createChart(dataset);
+        final ChartPanel chartPanel = new ChartPanel(chart);
+        chartPanel.setPreferredSize(new java.awt.Dimension(500, 270));
+        setContentPane(chartPanel);
+    }
+    
+    public Plot2D(final String title, Float[] bytes, double xResize) {
+        super(title);
+
+        final XYDataset dataset = createDataset(bytes, xResize);
+        final JFreeChart chart = createChart(dataset);
+        final ChartPanel chartPanel = new ChartPanel(chart);
+        chartPanel.setPreferredSize(new java.awt.Dimension(500, 270));
+        setContentPane(chartPanel);
     }
 
     private JFreeChart createChart(final XYDataset dataset) {
@@ -90,6 +109,40 @@ public class Plot2D extends ApplicationFrame {
     }
 
     private XYDataset createDataset(float[] bytes, double xResize) {
+        System.out.println("Preparing dataset");
+        final XYSeries series1 = new XYSeries("First");
+        int pos = 0;
+        for (int i = 0; i < bytes.length / 2; i++) {
+            series1.add(++pos * xResize, bytes[i]);
+        }
+
+        final XYSeriesCollection dataset = new XYSeriesCollection();
+        dataset.addSeries(series1);
+
+        System.out.println("Preparing dataset. Done.");
+
+        return dataset;
+
+    }
+    
+    private XYDataset createDataset(Float[] bytes, double xResize) {
+        System.out.println("Preparing dataset");
+        final XYSeries series1 = new XYSeries("First");
+        int pos = 0;
+        for (int i = 0; i < bytes.length / 2; i++) {
+            series1.add(++pos * xResize, bytes[i]);
+        }
+
+        final XYSeriesCollection dataset = new XYSeriesCollection();
+        dataset.addSeries(series1);
+
+        System.out.println("Preparing dataset. Done.");
+
+        return dataset;
+
+    }
+    
+    private XYDataset createDataset(double[] bytes, double xResize) {
         System.out.println("Preparing dataset");
         final XYSeries series1 = new XYSeries("First");
         int pos = 0;

@@ -1,7 +1,15 @@
 package su.drei.mp3extr;
 
+import java.util.ArrayList;
+
+import com.jmatio.io.MatFileWriter;
+import com.jmatio.types.MLArray;
+import com.jmatio.types.MLSingle;
+
 import su.drei.mp3extr.exporter.InMemoryExporter;
 import su.drei.mp3extr.exporter.InMemoryPlottingExporter;
+import su.drei.mp3extr.exporter.MatFileExporter;
+import su.drei.mp3extr.exporter.PcaExporter;
 import su.drei.mp3extr.impl.Mp3Decoder;
 import su.drei.mp3extr.impl.Mp3ThreadedDecoder;
 
@@ -18,11 +26,11 @@ public class Test {
     static float x_width;
 
     public static void main(String[] args) throws Exception {
-
+       
         String filePath = null;
 
         // for convenient audio parts spec.
-        int preset = 2;
+        int preset = 1;
 
         switch (preset) {
         case 1:
@@ -60,7 +68,10 @@ public class Test {
         x_pos = (sample_start + sample_end) / 2 / total_length;
         x_width = (sample_end - sample_start) / total_length;
 
-        Mp3Decoder mp3dec = new Mp3ThreadedDecoder(new InMemoryPlottingExporter(x_pos, x_width), BUFFER_SIZE);
+//        Mp3Decoder mp3dec = new Mp3ThreadedDecoder(new InMemoryPlottingExporter(x_pos, x_width), BUFFER_SIZE);
+//        Mp3Decoder mp3dec = new Mp3ThreadedDecoder(new PcaExporter(), BUFFER_SIZE);
+        Mp3Decoder mp3dec = new Mp3ThreadedDecoder(new MatFileExporter(), BUFFER_SIZE);
+
 //        Mp3Decoder mp3dec = new Mp3ThreadedDecoder(new InMemoryExporter(), BUFFER_SIZE);
 
         mp3dec.readPCM(filePath);
@@ -71,7 +82,10 @@ public class Test {
     
     /** 07/09/2014
      *  
-"D:\\music\\Deftones\\1997 - Around The Fur\\10 - Mx + Damone (hidden track).mp3"  - GOOD SAMPLE FOR SILENCE SKIPPING     
+"D:\\music\\Deftones\\1997 - Around The Fur\\10 - Mx + Damone (hidden track).mp3"  - GOOD SAMPLE FOR SILENCE SKIPPING    
+Processed in 101248, 16000 old stat
+One dft batch equals to 23.219954ms
+Histograms have 2 channels, 96417 dft batches and 1024 dft size while having samplRate=44100.0 
      * 
      * 
 Rate 44100.0, channels 2 for file D:\music\Accept\1979-Accept\01-Lady Lou.mp3 

@@ -1,7 +1,15 @@
 package su.drei.mp3extr.exporter;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.apache.commons.io.IOUtils;
+
+import com.jmatio.io.MatFileWriter;
+import com.jmatio.types.MLArray;
+import com.jmatio.types.MLSingle;
 
 public class InMemoryExporter implements IDataExporter {
 
@@ -43,7 +51,7 @@ public class InMemoryExporter implements IDataExporter {
             System.out.println("Handling batch No." + freqDHist[0].size());
         }
         freqDHist[channel].add(freqDomainBatch);
-//        if(freqDHist[channel].size() > 128) freqDHist[channel].clear();
+        //        if(freqDHist[channel].size() > 128) freqDHist[channel].clear();
     }
 
     @Override
