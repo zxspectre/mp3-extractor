@@ -30,7 +30,7 @@ public class Test {
         String filePath = null;
 
         // for convenient audio parts spec.
-        int preset =4;
+        int preset =8;
         String VAR_NAME = "SONG";
 
         switch (preset) {

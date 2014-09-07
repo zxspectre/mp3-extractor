@@ -1,4 +1,4 @@
-function [S] = pca(batch1, batch2, batch15, batch16,batch40, batch56, batch78, batch99)
+function [S] = pca8(batch1, batch2, batch15, batch16,batch40, batch56, batch78, batch99)
 
 a=batch1';
 b=batch2';
