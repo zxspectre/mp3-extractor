@@ -19,6 +19,10 @@ import com.jmatio.types.MLSingle;
  *
  */
 public class MatFileExporter implements IDataExporter {
+    
+    //If song fragment has average PCM amplitude less that MaxLevel(=Short.MAX_VAL after normalization) * SILENCE_LEVEL, then skip this buffer 
+    protected final float SILENCE_LEVEL = 0.1f;
+
 
     // array (by channel) of list(batch no) of doubles(histogram itself)...
     protected List<float[]>[] freqDHist = null;
@@ -65,7 +69,7 @@ public class MatFileExporter implements IDataExporter {
     @Override
     public void flush() {
         int batchSize = freqDHist[0].get(0).length;
-        int batchBatchSize = 500;
+        int batchBatchSize = 125;
         int batchBatch = 0;
         try {
             List<MLArray> list = new ArrayList<MLArray>();
@@ -73,6 +77,16 @@ public class MatFileExporter implements IDataExporter {
             Float[] batch = new Float[batchSize * batchBatchSize];
             clearArray(batch);
             for (int batchNo = 0; batchNo < freqDHist[0].size(); batchNo++) {
+
+                //crude check for silence across channels
+                boolean willProcessThisBatch = true;
+                for (int chNo = 0; chNo < channels; chNo++) {
+                    willProcessThisBatch = willProcessThisBatch && check4Silence(freqDHist[chNo].get(batchNo)); 
+                }
+                if(!willProcessThisBatch){
+                    continue;
+                }
+
                 for (int chNo = 0; chNo < channels; chNo++) {
                     for (int pos = 0; pos < batchSize; pos++) {
                         batch[pos + subBatch * batchSize] += freqDHist[chNo].get(batchNo)[pos] / channels;
@@ -92,7 +106,7 @@ public class MatFileExporter implements IDataExporter {
                     //TODO: test code, for now export only the middle of the song
                     if ((int)(freqDHist[0].size() / batchBatchSize / 2) == batchBatch) {
                         //write 150 hists in 1 array
-                        MLSingle mlTriple = new MLSingle(varName + batchBatch, batch, batchSize *4);
+                        MLSingle mlTriple = new MLSingle(varName + batchBatch, batch, batchSize);
                         list.add(mlTriple);
                     }
                     subBatch = 0;
@@ -105,7 +119,7 @@ public class MatFileExporter implements IDataExporter {
             new MatFileWriter("../"+varName+".mat", list);
 
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
 
@@ -113,6 +127,19 @@ public class MatFileExporter implements IDataExporter {
         for (int i = 0; i < batch.length; i++) {
             batch[i] = 0f;
         }
+    }
+
+    /**
+     * Detect silence. Should be invoked after normalization and after channel averaging.
+     * @param channelFrames input data
+     * @return true if data considered a silence, intro or outro, false if it's considered meaningful
+     */
+    protected boolean check4Silence(float[] channelFrames) {
+        float avg = 0;
+        for(float f: channelFrames){
+            avg += Math.abs(f) / channelFrames.length;
+        }
+        return avg < SILENCE_LEVEL * Short.MAX_VALUE;
     }
 
 }

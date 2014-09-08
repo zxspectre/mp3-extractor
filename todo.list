@@ -1,14 +1,17 @@
- perform normalization (save modified mp3 or PCM to check?)
- don't process silent (low vol) parts
-  handle extreme values (short samples e.g.)
  export data in some format (series of freqDHist batches? e.g. ~5sec length) + mark style
  scan specified folder and handle all mp3 there (skip short mp3, as they aren't songs)
  currently DbConversion is performed on each channel, then averaging is being made to get 1 Histogram. Consider other choices (export stereo histogram-unlikely, perform averaging first, toDb - last)
- Performance: implement Mp3AveragingDecoder - which will average all channels before passing data to window-dft-toDb function chain 
-
+ Performance: implement Mp3AveragingDecoder - which will average all channels before passing data to window-dft-toDb function chain
+ Refactor: move normalization from Mp3Decoder to HistogramCreator? Or better, make a modularized framework outta HistogramCreator
+ Refactor: move silence trimming from MatFileExporter to a more general place.
+ Think about when channel concat. should take place, perhaps before DFT? Too much pain sync'ing buffer length for each channel.
+ Handle extreme values (short samples e.g.)
+ 
 Resolved:
  handle end of the buffer (or discard it?)
  rewrite using stream API (doesn't seem to improve much)
  test compatibility with diff. formats of mp3 (looks OK, but varying sampleRates & channelCnt require scaling of various params)
   + for now - discard all that's not 44100 Hz, 2 channels 	
+ perform normalization (save modified mp3 or PCM to check?)
+ don't process silent (low vol) parts
  

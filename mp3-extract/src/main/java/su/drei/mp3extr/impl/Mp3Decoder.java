@@ -15,6 +15,7 @@ import su.drei.mp3extr.impl.window.BlackmanHarris;
 
 public class Mp3Decoder {
 
+
     protected IDataExporter exporter;
     protected HistogramCreator histogrammer;
     protected final int bufferSize;
@@ -38,7 +39,7 @@ public class Mp3Decoder {
                 preprocess(decodedFormat, din);
             }
         }
-        
+
         //try open audio input stream from file
         try (AudioInputStream in = AudioSystem.getAudioInputStream(file)) {
             AudioFormat baseFormat = in.getFormat();
@@ -101,7 +102,7 @@ public class Mp3Decoder {
 
     protected void process(AudioFormat decodedFormat, AudioInputStream din) throws LineUnavailableException, IOException {
         long start = System.currentTimeMillis();
-        final float normalizationScale = preprocessingRequired ? (float)Short.MAX_VALUE / preprocessor.getMax() : 1;
+        final float normalizationScale = preprocessingRequired ? (float) Short.MAX_VALUE / preprocessor.getMax() : 1;
         //init exporter 
         exporter.init(decodedFormat.getSampleRate(), decodedFormat.getChannels());
         //create histogram calculator
@@ -135,9 +136,9 @@ public class Mp3Decoder {
                         }
 
                         // save new value to channel specific array
-                        if(normalizationScale > 1.01){
+                        if (normalizationScale > 1.01) {
                             channelFrames[pos] = (float) Math.floor(value * normalizationScale);
-                        }else{
+                        } else {
                             channelFrames[pos] = value;
                         }
                     }
@@ -153,12 +154,12 @@ public class Mp3Decoder {
                     // the by-channel loop
                     if (nBytesRead == data.length) {
                         histogrammer.readHistogram(channelFrames, chNo, batchNo);
+                        batchNo++;
                     }
 
                 }
                 // finished looping over channels, read next buffer from audio
                 // stream
-                batchNo++;
             }
             // Stop
             line.drain();
@@ -170,6 +171,7 @@ public class Mp3Decoder {
         System.out.println("Processed in " + (System.currentTimeMillis() - start) + ", 16000 old stat, scaled by " + normalizationScale);
         exporter.flush();
     }
+
 
     protected int readIntoBuffer(byte[] data, AudioInputStream din) throws IOException {
         int totalBytesRead = 0;

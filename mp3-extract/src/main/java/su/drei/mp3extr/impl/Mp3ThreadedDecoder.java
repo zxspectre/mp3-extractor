@@ -72,7 +72,6 @@ public class Mp3ThreadedDecoder extends Mp3Decoder {
 
                 // finished looping over channels, read next buffer from audio
                 // stream
-                batchNo++;
             }
             // Stop
             pool.shutdown();
@@ -129,6 +128,7 @@ public class Mp3ThreadedDecoder extends Mp3Decoder {
             // end of processing frames for one channel, continue with
             // the by-channel loop
             histogrammer.readHistogram(channelFrames, chNo, batchNo);
+            batchNo++;
             return true;
         }
 
