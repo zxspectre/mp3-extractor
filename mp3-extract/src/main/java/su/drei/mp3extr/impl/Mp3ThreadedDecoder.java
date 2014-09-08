@@ -29,8 +29,8 @@ public class Mp3ThreadedDecoder extends Mp3Decoder {
     int channelsCount;
     boolean bigEndian;
 
-    public Mp3ThreadedDecoder(IDataExporter exporter, int bufferSize) {
-        super(exporter, bufferSize);
+    public Mp3ThreadedDecoder(IDataExporter exporter, int bufferSize, boolean preprocess) {
+        super(exporter, bufferSize, preprocess);
     }
 
     @Override
@@ -81,7 +81,7 @@ public class Mp3ThreadedDecoder extends Mp3Decoder {
             line.close();
             din.close();
         }
-        System.out.println("Processed in " + (System.currentTimeMillis() - start) + ", 16000 old stat");
+        System.out.println("Processed in " + (System.currentTimeMillis() - start) + ", 16000 old stat, scaled by " + (float)Short.MAX_VALUE / preprocessor.getMax());
         exporter.flush();
     }
 
@@ -94,6 +94,7 @@ public class Mp3ThreadedDecoder extends Mp3Decoder {
 
         @Override
         public Boolean call() throws Exception {
+            final float normalizationScale = preprocessingRequired ? (float)Short.MAX_VALUE / preprocessor.getMax() : 1;
             final int framesCnt = bufferSize / (channelsCount * 2);
             // loop over channels in audio stream
             float[] channelFrames = new float[framesCnt];
@@ -110,7 +111,11 @@ public class Mp3ThreadedDecoder extends Mp3Decoder {
                 }
 
                 // save new value to channel specific array
-                channelFrames[pos] = value;
+                if(normalizationScale > 1.01){
+                    channelFrames[pos] = (float) Math.floor(value * normalizationScale);
+                }else{
+                    channelFrames[pos] = value;
+                }
             }
 
             // TODO: move the code of processing each PCM batch to some

@@ -3,4 +3,4 @@
 **/target/
 **/.classpath
 mp3-extract/fdh.out
-out.mat
+*.mat

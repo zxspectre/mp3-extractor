@@ -16,6 +16,12 @@ import com.jmatio.io.MatFileWriter;
 import com.jmatio.types.MLArray;
 import com.jmatio.types.MLSingle;
 
+/**
+ * Could not get this to work OK. Say hello to OutOfMem
+ * @author loki
+ *
+ */
+@Deprecated
 public class PcaExporter implements IDataExporter {
 
     private static final int histogramBatch=100;

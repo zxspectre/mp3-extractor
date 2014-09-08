@@ -30,7 +30,7 @@ public class Test {
         String filePath = null;
 
         // for convenient audio parts spec.
-        int preset =8;
+        int preset =1;
         String VAR_NAME = "SONG";
 
         switch (preset) {
@@ -53,10 +53,12 @@ public class Test {
             VAR_NAME = "SUMM";
             break;
         case 4:
+            //Max amplitude is 9222
             filePath = "D:\\music\\Classical\\Vivaldi\\Vivaldi_Spring2.mp3";
             VAR_NAME = "VIV";
             break;
         case 5:
+            //Max amplitude is 27785
             filePath = "D:\\music\\AcDc\\1975 - T.N.T\\05-T.N.T..mp3";
             VAR_NAME = "ACDC";
             break;
@@ -77,12 +79,11 @@ public class Test {
         x_pos = (sample_start + sample_end) / 2 / total_length;
         x_width = (sample_end - sample_start) / total_length;
 
-//        Mp3Decoder mp3dec = new Mp3ThreadedDecoder(new InMemoryPlottingExporter(x_pos, x_width), BUFFER_SIZE);
-//        Mp3Decoder mp3dec = new Mp3ThreadedDecoder(new PcaExporter(), BUFFER_SIZE);
-        Mp3Decoder mp3dec = new Mp3ThreadedDecoder(new MatFileExporter(VAR_NAME), BUFFER_SIZE);
+//        Mp3Decoder mp3dec = new Mp3ThreadedDecoder(new InMemoryPlottingExporter(x_pos, x_width), BUFFER_SIZE, true);
+//        Mp3Decoder mp3dec = new Mp3ThreadedDecoder(new PcaExporter(), BUFFER_SIZE, true);
+        Mp3Decoder mp3dec = new Mp3ThreadedDecoder(new MatFileExporter(VAR_NAME), BUFFER_SIZE, true);
         
-
-//        Mp3Decoder mp3dec = new Mp3ThreadedDecoder(new InMemoryExporter(), BUFFER_SIZE);
+//        Mp3Decoder mp3dec = new Mp3ThreadedDecoder(new InMemoryExporter(), BUFFER_SIZE, true);
 
         mp3dec.readPCM(filePath);
         

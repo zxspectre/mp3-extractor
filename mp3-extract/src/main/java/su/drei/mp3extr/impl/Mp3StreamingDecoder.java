@@ -21,8 +21,8 @@ import su.drei.mp3extr.impl.window.IWindowFunc;
 
 public class Mp3StreamingDecoder extends Mp3Decoder{
 
-    public Mp3StreamingDecoder(IDataExporter exporter, int bufferSize) {
-        super(exporter, bufferSize);
+    public Mp3StreamingDecoder(IDataExporter exporter, int bufferSize, boolean preprocess) {
+        super(exporter, bufferSize, preprocess);
     }
 
     @Override
@@ -37,6 +37,7 @@ public class Mp3StreamingDecoder extends Mp3Decoder{
             Spliterator<byte[]> spliteraptor = Spliterators.spliteratorUnknownSize(new PcmIterator(din, bufferSize), Spliterator.IMMUTABLE | Spliterator.NONNULL | Spliterator.CONCURRENT);
             Stream<byte[]> stream = StreamSupport.stream(spliteraptor, false);
             
+            //TODO: no normalization here
             stream
                 .flatMap(new PcmChannelMapper(channelsCount, decodedFormat.isBigEndian()))
                 .map(x -> {exporter.exportPcmBatch(x.channelNo, x.data); return x;})
