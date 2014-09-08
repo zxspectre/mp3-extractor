@@ -8,6 +8,8 @@ monospace terminal part - eigenvalues of covariance matrix
 Means that each track has 125 vectors (each represented as one dot);
  each vector is concatenation of 4 histograms, each histogram having 512 points. I.e. vector length = 2048.
 
+512 pts histogram covers about 21ms; 1024 pts ~ 42ms.
+
 Initial PCM buffer size in this case is 4096;
 2048 after reading byte-scattered ints
 1024 after averaging over 2 channels;

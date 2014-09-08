@@ -69,7 +69,7 @@ public class MatFileExporter implements IDataExporter {
     @Override
     public void flush() {
         int batchSize = freqDHist[0].get(0).length;
-        int batchBatchSize = 125;
+        int batchBatchSize = 500;
         int batchBatch = 0;
         try {
             List<MLArray> list = new ArrayList<MLArray>();
@@ -106,7 +106,7 @@ public class MatFileExporter implements IDataExporter {
                     //TODO: test code, for now export only the middle of the song
                     if ((int)(freqDHist[0].size() / batchBatchSize / 2) == batchBatch) {
                         //write 150 hists in 1 array
-                        MLSingle mlTriple = new MLSingle(varName + batchBatch, batch, batchSize);
+                        MLSingle mlTriple = new MLSingle(varName + batchBatch, batch, batchSize * 4);
                         list.add(mlTriple);
                     }
                     subBatch = 0;
