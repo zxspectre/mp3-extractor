@@ -6,6 +6,11 @@
  Refactor: move silence trimming from MatFileExporter to a more general place.
  Think about when channel concat. should take place, perhaps before DFT? Too much pain sync'ing buffer length for each channel.
  Handle extreme values (short samples e.g.)
+ Try to use following feature vector: concat ((k subsequent hists), (k hists with distance 1), (k hists with distance 2) .. (k hists with distance n))
+                             Purpose: to have some "long time" dependencies data. Of course, the ideal variant is to have long enough sample of only subsequent hists,
+                             but because of performance it could be not achievable. 
+ Try to use raw (without DFT) data. 
+ 
  
 Resolved:
  handle end of the buffer (or discard it?)
