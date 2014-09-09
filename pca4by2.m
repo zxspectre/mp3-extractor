@@ -28,11 +28,11 @@ Zall=[Z1;Z2;Z3;Z4;Z5;Z6;Z7;Z8];
 
 palette=hsv(41);
 colors=[ones(size(Z1,1),3).*palette(1,:);
-	ones(size(Z2,1),3).*palette(3,:);
-	ones(size(Z3,1),3).*palette(5,:);
-	ones(size(Z4,1),3).*palette(7,:);
-	ones(size(Z5,1),3).*palette(21,:);
+	ones(size(Z2,1),3).*palette(4,:);
+	ones(size(Z3,1),3).*palette(7,:);
+	ones(size(Z4,1),3).*palette(10,:);
+	ones(size(Z5,1),3).*palette(20,:);
 	ones(size(Z6,1),3).*palette(23,:);
-	ones(size(Z7,1),3).*palette(25,:);
-	ones(size(Z8,1),3).*palette(27,:)];
+	ones(size(Z7,1),3).*palette(26,:);
+	ones(size(Z8,1),3).*palette(29,:)];
 scatter(Zall(:,1),Zall(:,2),8,colors);

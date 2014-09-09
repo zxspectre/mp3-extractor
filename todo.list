@@ -8,8 +8,14 @@
  Handle extreme values (short samples e.g.)
  Try to use following feature vector: concat ((k subsequent hists), (k hists with distance 1), (k hists with distance 2) .. (k hists with distance n))
                              Purpose: to have some "long time" dependencies data. Of course, the ideal variant is to have long enough sample of only subsequent hists,
-                             but because of performance it could be not achievable. 
+                             but because of performance it could be not achievable.
+   May increase dimensionality substantially. Need to check. PCA for one, will not work on my PC with too much histograms concatenated (more than 8) =)                             
  Try to use raw (without DFT) data. 
+   Raw data currently takes twice as much space (as in vector length) that histogram. But histograms are not built using overlapping windows - best to fix it.
+   Also may be useful to consider other audio characteristics: spectrogram mfcc flux zcr rolloff
+ 
+ I propose to take any data and try to use it in some NN, in case of problems with space try PCA next.
+ Sparse coding is expensive by itself, also it may not always help - in PCA for instance it does not help (and actually it increases dimensionality). 
  
  
 Resolved:
