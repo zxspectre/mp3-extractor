@@ -32,12 +32,13 @@ Z8=s*U(:,1:2);
 Zall=[Z1;Z2;Z3;Z4;Z5;Z6;Z7;Z8];
 
 palette=hsv(41);
-colors=[ones(size(Z1,1),3).*palette(1,:);
-	ones(size(Z2,1),3).*palette(4,:);
-	ones(size(Z3,1),3).*palette(7,:);
-	ones(size(Z4,1),3).*palette(10,:);
-	ones(size(Z5,1),3).*palette(20,:);
-	ones(size(Z6,1),3).*palette(23,:);
-	ones(size(Z7,1),3).*palette(26,:);
-	ones(size(Z8,1),3).*palette(29,:)];
-scatter(Zall(:,1),Zall(:,2),8,colors);
+
+names = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'};
+x_vals = {Z1(:,1), Z2(:,1), Z3(:,1), Z4(:,1), Z5(:,1), Z6(:,1), Z7(:,1), Z8(:,1)};
+y_vals = {Z1(:,2), Z2(:,2), Z3(:,2), Z4(:,2), Z5(:,2), Z6(:,2), Z7(:,2), Z8(:,2)};
+sizes  = {10, 10, 10, 10, 10, 10, 10, 10};
+colors = {hsv(1), hsv(2), hsv(3), hsv(4), hsv(5), hsv(6), hsv(7), hsv(8)};
+styles = {'s', 's', 's', 's', 's', 's', 's', 's'}
+
+scatter_series_set(x_vals, y_vals, sizes, colors, styles);
+legend(names, 'location', 'southeast');

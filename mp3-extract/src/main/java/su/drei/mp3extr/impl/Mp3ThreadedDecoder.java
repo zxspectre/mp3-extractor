@@ -35,8 +35,6 @@ public class Mp3ThreadedDecoder extends Mp3Decoder {
 
     @Override
     protected void process(AudioFormat decodedFormat, AudioInputStream din) throws IOException, LineUnavailableException {
-        System.out.println(String.format("Sample rate %s, channels=%s", decodedFormat.getSampleRate(), decodedFormat.getChannels()));
-
         long start = System.currentTimeMillis();
         // init exporter
         exporter.init(decodedFormat.getSampleRate(), decodedFormat.getChannels());
@@ -80,7 +78,7 @@ public class Mp3ThreadedDecoder extends Mp3Decoder {
             line.close();
             din.close();
         }
-        System.out.println("Processed in " + (System.currentTimeMillis() - start) + ", 16000 old stat, scaled by " + (float)Short.MAX_VALUE / preprocessor.getMax());
+//        System.out.println("Processed in " + (System.currentTimeMillis() - start) + ", 16000 old stat, scaled by " + (float)Short.MAX_VALUE / preprocessor.getMax());
         exporter.flush();
     }
 

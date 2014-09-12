@@ -1,5 +1,6 @@
 package su.drei.mp3extr;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import com.jmatio.io.MatFileWriter;
@@ -9,6 +10,7 @@ import com.jmatio.types.MLSingle;
 import su.drei.mp3extr.exporter.InMemoryExporter;
 import su.drei.mp3extr.exporter.InMemoryPlottingExporter;
 import su.drei.mp3extr.exporter.MatFileExporter;
+import su.drei.mp3extr.exporter.MatFileMiddleExporter;
 import su.drei.mp3extr.exporter.PcaExporter;
 import su.drei.mp3extr.impl.Mp3Decoder;
 import su.drei.mp3extr.impl.Mp3ThreadedDecoder;
@@ -81,7 +83,8 @@ public class Test {
 
 //        Mp3Decoder mp3dec = new Mp3ThreadedDecoder(new InMemoryPlottingExporter(x_pos, x_width), BUFFER_SIZE, true);
 //        Mp3Decoder mp3dec = new Mp3ThreadedDecoder(new PcaExporter(), BUFFER_SIZE, true);
-        Mp3Decoder mp3dec = new Mp3ThreadedDecoder(new MatFileExporter(VAR_NAME), BUFFER_SIZE, true);
+//        Mp3Decoder mp3dec = new Mp3ThreadedDecoder(new MatFileMiddleExporter(VAR_NAME), BUFFER_SIZE, true);
+        Mp3Decoder mp3dec = new Mp3ThreadedDecoder(new MatFileExporter(new File("D:\\projects\\05-mp3-data"), VAR_NAME), BUFFER_SIZE, true);
         
 //        Mp3Decoder mp3dec = new Mp3ThreadedDecoder(new InMemoryExporter(), BUFFER_SIZE, true);
 
