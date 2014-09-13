@@ -14,7 +14,7 @@ xy=[a;b;x;y;u;v;r;s];
 
 mu=ones(1,size(xy,1))*xy;
 xy-=(mu./size(xy,1));
-mean(mu./size(xy,1));
+
 
 sigma=xy'*xy;
 sigma=sigma./size(xy,1);

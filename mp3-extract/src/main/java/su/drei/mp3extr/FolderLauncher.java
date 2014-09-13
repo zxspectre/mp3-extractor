@@ -9,9 +9,9 @@ import su.drei.mp3extr.impl.Mp3ThreadedDecoder;
 
 //     java -cp mp3-extract-1.0-SNAPSHOT.jar su.drei.mp3extr.FolderLauncher
 
-//java -jar mp3-extract-1.0-SNAPSHOT-jar-with-dependencies.jar  "D:\projects\05-mp3-data\heavy\in" "D:\projects\05-mp3-data\heavy\out" "heavy"
-//java -jar mp3-extract-1.0-SNAPSHOT-jar-with-dependencies.jar  "D:\projects\05-mp3-data\rock\in" "D:\projects\05-mp3-data\rock\out" "rock"
-//java -jar mp3-extract-1.0-SNAPSHOT-jar-with-dependencies.jar  "D:\projects\05-mp3-data\power\in" "D:\projects\05-mp3-data\power\out" "power"
+//java -jar mp3-extract-1.0-SNAPSHOT-jar-with-dependencies.jar  "D:\projects\05-mp3-data\heavy\in" "D:\projects\05-mp3-data\heavy\out4" "heavy"
+//java -jar mp3-extract-1.0-SNAPSHOT-jar-with-dependencies.jar  "D:\projects\05-mp3-data\rock\in" "D:\projects\05-mp3-data\rock\out4" "rock"
+//java -jar mp3-extract-1.0-SNAPSHOT-jar-with-dependencies.jar  "D:\projects\05-mp3-data\power\in" "D:\projects\05-mp3-data\power\out4" "power"
 public class FolderLauncher {
     private static final int BUFFER_SIZE = 4096;
 
@@ -28,6 +28,10 @@ public class FolderLauncher {
         File outputFolder = new File(args[1]);
         String varName = args[2];
 
+        if(!outputFolder.exists()){
+            outputFolder.mkdirs();
+        }
+        
         int fileNo = 0;
         for (File f : inputFolder.listFiles(new FilenameFilter() {
             @Override
@@ -36,12 +40,13 @@ public class FolderLauncher {
             }
         })) {
             try {
-                Mp3Decoder mp3dec = new Mp3ThreadedDecoder(new MatFileExporter(outputFolder, varName + fileNo), BUFFER_SIZE, true);
+                Mp3Decoder mp3dec = new Mp3ThreadedDecoder(new MatFileExporter(outputFolder, varName + fileNo, 4), BUFFER_SIZE, true);
                 mp3dec.readPCM(f.getAbsolutePath());
                 fileNo++;
                 System.out.println(fileNo + ": successfully processed "+f.getAbsolutePath());
             } catch (Exception e) {
                 System.err.println(String.format("Error handling file %s due to %s", f.getAbsolutePath(), e.getMessage()));
+                e.printStackTrace();
             }
         }
 

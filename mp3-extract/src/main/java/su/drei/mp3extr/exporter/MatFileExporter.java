@@ -29,10 +29,12 @@ public class MatFileExporter implements IDataExporter {
     protected int channels;
     protected String varName;
     protected File outputFolder;
+    protected int histogramConcatFactor;
 
-    public MatFileExporter(File outputFolder, String varName) {
+    public MatFileExporter(File outputFolder, String varName, int histogramConcatFactor) {
         this.varName = varName;
         this.outputFolder = outputFolder;
+        this.histogramConcatFactor = histogramConcatFactor;
     }
 
     @Override
@@ -64,10 +66,12 @@ public class MatFileExporter implements IDataExporter {
     @Override
     public void flush() {
         int batchSize = freqDHist[0].get(0).length;
+        int batchSizeCropped = freqDHist[0].size() - (freqDHist[0].size() % histogramConcatFactor);
+        
         List<MLArray> list = new ArrayList<MLArray>();
-        Float[] outputArray = new Float[batchSize * freqDHist[0].size()];
+        Float[] outputArray = new Float[batchSize * batchSizeCropped];
         initArray(outputArray);
-        for (int batchNo = 0; batchNo < freqDHist[0].size(); batchNo++) {
+        for (int batchNo = 0; batchNo < batchSizeCropped; batchNo++) {
             //crude check for silence across channels
             boolean willProcessThisBatch = true;
             for (int chNo = 0; chNo < channels; chNo++) {
@@ -83,7 +87,7 @@ public class MatFileExporter implements IDataExporter {
                 }
             }
         }
-        MLSingle mlTriple = new MLSingle(varName, outputArray, batchSize);
+        MLSingle mlTriple = new MLSingle(varName, outputArray, batchSize * histogramConcatFactor);
         list.add(mlTriple);
         try {
             new MatFileWriter(new File(outputFolder, varName + ".mat"), list);

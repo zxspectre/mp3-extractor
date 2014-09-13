@@ -84,7 +84,7 @@ public class Test {
 //        Mp3Decoder mp3dec = new Mp3ThreadedDecoder(new InMemoryPlottingExporter(x_pos, x_width), BUFFER_SIZE, true);
 //        Mp3Decoder mp3dec = new Mp3ThreadedDecoder(new PcaExporter(), BUFFER_SIZE, true);
 //        Mp3Decoder mp3dec = new Mp3ThreadedDecoder(new MatFileMiddleExporter(VAR_NAME), BUFFER_SIZE, true);
-        Mp3Decoder mp3dec = new Mp3ThreadedDecoder(new MatFileExporter(new File("D:\\projects\\05-mp3-data"), VAR_NAME), BUFFER_SIZE, true);
+        Mp3Decoder mp3dec = new Mp3ThreadedDecoder(new MatFileExporter(new File("D:\\projects\\05-mp3-data"), VAR_NAME, 1), BUFFER_SIZE, true);
         
 //        Mp3Decoder mp3dec = new Mp3ThreadedDecoder(new InMemoryExporter(), BUFFER_SIZE, true);
 
